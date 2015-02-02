@@ -10,7 +10,8 @@
   "description": "Common Form content object validation",
   "dependencies": {
     "commonform-hashing": "commonform/commonform-hashing#0.0.1",
-    "owasp-password-strength-test": "^1.1.0"
+    "owasp-password-strength-test": "^1.1.0",
+    "semver": "^4.2.0"
   },
   "devDependencies": {
     "chai": "^1.10.0",

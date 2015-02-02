@@ -1,4 +1,5 @@
 var owasp = require('owasp-password-strength-test');
+var semver = require('semver');
 
 var hashing = require('commonform-hashing');
 
@@ -143,10 +144,9 @@ var formFactory = function(subFormPredicate) {
 exports.isForm = formFactory(exports.isSubForm);
 exports.isNestedForm = formFactory(exports.isNestedSubForm);
 
-var SIMPLIFIED_SEMVER = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
-
 var version = exports.isVersion = function(argument) {
-  return SIMPLIFIED_SEMVER.test(argument);
+  return semver.valid(argument) &&
+    semver.clean(argument) === argument;
 };
 
 var bookmarkName = exports.isBookmarkName = term;
