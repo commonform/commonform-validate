@@ -6,7 +6,7 @@ describe('Users', function() {
   it('accepts a valid example', function() {
     var user = {
       name: 'Kyle Mitchell',
-      password: 'predictably weak',
+      password: 'waxed hobbits missed eisengard',
       authorizations: ['read', 'write']
     };
     expect(validation.isUser(user))

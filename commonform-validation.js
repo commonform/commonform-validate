@@ -1,3 +1,5 @@
+var owasp = require('owasp-password-strength-test');
+
 var hashing = require('commonform-hashing');
 
 var toString = Object.prototype.toString;
@@ -170,7 +172,7 @@ var authorization = exports.isAuthorization = function(argument) {
 };
 
 var password = exports.isPassword = function(argument) {
-  return isString(argument) && argument.length >= 6;
+  return owasp.test(argument).errors.length === 0;
 };
 
 var userName = exports.isUserName = function(argument) {
