@@ -102,7 +102,7 @@ var subFactory = function(formPredicate) {
 
 exports.isSubForm = subFactory(hashing.isDigest);
 exports.isNestedSubForm = function() {
-  return subFactory(exports.isForm).apply(this, arguments);
+  return subFactory(exports.isNestedForm).apply(this, arguments);
 };
 
 var formFactory = function(subFormPredicate) {
