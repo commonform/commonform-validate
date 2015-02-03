@@ -90,13 +90,17 @@ var subFactory = function(formPredicate) {
       return false;
     }
     var keys = Object.keys(argument);
-    return keys.length === 2 &&
-
-      keys.indexOf('summary') > -1 &&
-      summary(argument.summary) &&
+    return (
+        keys.indexOf('summary') < 0 ||
+        summary(argument.summary)
+      ) &&
 
       keys.indexOf('form') > -1 &&
-      formPredicate(argument.form);
+      formPredicate(argument.form) &&
+
+      !keys.some(function(key) {
+        return ['form', 'summary'].indexOf(key) < 0;
+      });
   };
 };
 
