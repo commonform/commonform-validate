@@ -142,7 +142,8 @@ var formFactory = function(subFormPredicate) {
 };
 
 exports.isForm = formFactory(exports.isSubForm);
-exports.isNestedForm = formFactory(exports.isNestedSubForm);
+var nestedForm = exports.isNestedForm =
+  formFactory(exports.isNestedSubForm);
 
 var version = exports.isVersion = function(argument) {
   return semver.valid(argument) &&
@@ -192,4 +193,57 @@ exports.isUser = function(argument) {
     argument.authorizations.every(function(element) {
       return authorization(element);
     });
+};
+
+var onlyStringValues = function(argument) {
+  var type = toString.call(argument);
+  switch (type) {
+    case '[object String]':
+      return true;
+    case '[object Object]':
+      return Object.keys(argument).every(function(key) {
+        return onlyStringValues(argument[key]);
+      });
+    case '[object Array]':
+      return argument.every(onlyStringValues);
+    default:
+      return false;
+  }
+};
+
+var values = exports.isValues = function(argument) {
+  return isObject(argument) &&
+    Object.keys(argument).every(function(key) {
+      return isString(argument[key]);
+    });
+};
+
+var metadata = exports.isMetadata = function(argument) {
+  return isObject(argument) &&
+    argument.hasOwnProperty('title') &&
+    isString(argument.title) &&
+    Object.keys(argument).length === 1;
+};
+
+var preferences = exports.isPreferences = function(argument) {
+  return isObject(argument) &&
+    onlyStringValues(argument);
+};
+
+exports.isProject = function(argument) {
+  return isObject(argument) &&
+    argument.hasOwnProperty('commonform') &&
+    version(argument.commonform) &&
+
+    argument.hasOwnProperty('form') &&
+    nestedForm(argument.form) &&
+
+    argument.hasOwnProperty('values') &&
+    values(argument.values) &&
+
+    argument.hasOwnProperty('metadata') &&
+    metadata(argument.metadata) &&
+
+    argument.hasOwnProperty('preferences') &&
+    preferences(argument.preferences);
 };
