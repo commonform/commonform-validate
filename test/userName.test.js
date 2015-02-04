@@ -4,12 +4,12 @@ var validation = require('..');
 
 describe('User name', function() {
   it('rejects short names', function() {
-    expect(validation.isUserName('a'))
+    expect(validation.userName('a'))
       .to.be.false();
   });
 
   it('accepts a valid example', function() {
-    expect(validation.isUserName('kemitchell'))
+    expect(validation.userName('kemitchell'))
       .to.be.true();
   });
 });

@@ -4,14 +4,14 @@ var validation = require('..');
 
 describe('Definitions', function() {
   it('contain a single property, "definition"', function() {
-    expect(validation.isDefinition({definition: 'Consideration'}))
+    expect(validation.definition({definition: 'Consideration'}))
       .to.be.true();
   });
 
   it('cannot be functions', function() {
     var f = function() {};
     f.definition = 'Merger Consideration';
-    expect(validation.isDefinition(f))
+    expect(validation.definition(f))
       .to.be.false();
   });
 });

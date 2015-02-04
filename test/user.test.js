@@ -9,7 +9,7 @@ describe('Users', function() {
       password: 'waxed hobbits missed eisengard',
       authorizations: ['read', 'write']
     };
-    expect(validation.isUser(user))
+    expect(validation.user(user))
       .to.be.true();
   });
 });

@@ -4,7 +4,7 @@ var validation = require('..');
 
 describe('Use', function() {
   it('contain a single property, "use"', function() {
-    expect(validation.isUse({use: 'Merger Consideration'}))
+    expect(validation.use({use: 'Merger Consideration'}))
       .to.be.true();
   });
 });

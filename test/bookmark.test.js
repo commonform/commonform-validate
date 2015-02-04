@@ -14,7 +14,7 @@ describe('Bookmarks', function() {
       version: '2.0.1',
       form: VALID_DIGEST
     };
-    expect(validation.isBookmark(bookmark))
+    expect(validation.bookmark(bookmark))
       .to.be.true();
   });
 });

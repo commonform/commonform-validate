@@ -4,72 +4,72 @@ var validation = require('..');
 
 describe('Forms', function() {
   it('must have .content', function() {
-    expect(validation.isForm({}))
+    expect(validation.form({}))
       .to.be.false();
   });
 
   it('may have .conspicuos', function() {
-    expect(validation.isForm({content: ['Test'], conspicuous: 'true'}))
+    expect(validation.form({content: ['Test'], conspicuous: 'true'}))
       .to.be.true();
   });
 
   it('cannot have other properties', function() {
-    expect(validation.isForm({content: ['Test'], extra: false}))
+    expect(validation.form({content: ['Test'], extra: false}))
       .to.be.false();
   });
 
   it('cannot be functions', function() {
     var f = function() {};
     f.content = ['Text'];
-    expect(validation.isForm(f))
+    expect(validation.form(f))
       .to.be.false();
   });
 
   describe('.content', function() {
     it('must be an array', function() {
-      expect(validation.isForm({content: 'Test'}))
+      expect(validation.form({content: 'Test'}))
         .to.be.false();
     });
 
     it('cannot be empty', function() {
-      expect(validation.isForm({content: []}))
+      expect(validation.form({content: []}))
         .to.be.false();
     });
 
     it('cannot contain contiguous strings', function() {
-      expect(validation.isForm({content: ['a', 'b']}))
+      expect(validation.form({content: ['a', 'b']}))
         .to.be.false();
     });
 
     it('cannot contain empty strings', function() {
-      expect(validation.isForm({content: ['']}))
+      expect(validation.form({content: ['']}))
         .to.be.false();
     });
 
     it('cannot lead with a space', function() {
-      expect(validation.isForm({content: [' text']}))
+      expect(validation.form({content: [' text']}))
         .to.be.false();
     });
 
     it('cannot end with a space', function() {
-      expect(validation.isForm({content: ['text ']}))
+      expect(validation.form({content: ['text ']}))
         .to.be.false();
     });
   });
 
   describe('.conspicuous', function() {
     it('can be "true"', function() {
-      expect(validation.isForm({content: ['A'], conspicuous: 'true'}))
+      expect(validation.form({content: ['A'], conspicuous: 'true'}))
         .to.be.true();
     });
 
     it('cannot be (boolean) true', function() {
-      expect(validation.isForm({content: ['B'], conspicuous: true}))
+      expect(validation.form({content: ['B'], conspicuous: true}))
         .to.be.false();
     });
 
     it('cannot be null', function() {
-      expect(validation.isForm({content: ['Test'], conspicuous: null}))
+      expect(validation.form({content: ['Test'], conspicuous: null}))
         .to.be.false();
     });
   });
@@ -84,7 +84,7 @@ describe('Forms', function() {
         'Arbitration Association then in effect.'
       ]
     };
-    expect(validation.isForm(form))
+    expect(validation.form(form))
       .to.be.true();
   });
 });

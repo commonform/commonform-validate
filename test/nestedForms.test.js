@@ -33,7 +33,7 @@ describe('Nested forms', function() {
     };
 
     it('validates a real-world example', function() {
-      expect(validation.isNestedForm(example))
+      expect(validation.nestedForm(example))
         .to.be.true();
     });
   });

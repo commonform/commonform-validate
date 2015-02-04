@@ -4,7 +4,7 @@ var validation = require('..');
 
 describe('References', function() {
   it('contain a single property, "reference"', function() {
-    expect(validation.isReference({reference: 'Liability'}))
+    expect(validation.reference({reference: 'Liability'}))
       .to.be.true();
   });
 });

@@ -5,11 +5,11 @@
     "url": "http://kemitchell.com/"
   },
   "bugs": {
-    "url": "https://github.com/commonform/commonform-validation/issues"
+    "url": "https://github.com/commonform/commonform-validate/issues"
   },
   "description": "Common Form content object validation",
   "dependencies": {
-    "commonform-hashing": "commonform/commonform-hashing#0.0.1",
+    "commonform-hash": "commonform/commonform-hash",
     "owasp-password-strength-test": "^1.1.0",
     "semver": "^4.2.0"
   },
@@ -18,10 +18,9 @@
     "istanbul": "^0.3.5",
     "jscs": "^1.10.0",
     "jshint": "^2.6.0",
-    "mocha": "^2.1.0",
-    "semver": "^4.2.0"
+    "mocha": "^2.1.0"
   },
-  "homepage": "https://github.com/commonform/commonform-validation",
+  "homepage": "https://github.com/commonform/commonform-validate",
   "keywords": [
     "contracts",
     "document assembly",
@@ -29,11 +28,10 @@
     "law"
   ],
   "license": "Apache-2.0",
-  "main": "commonform-validation.js",
-  "name": "commonform-validation",
+  "name": "commonform-validate",
   "repository": {
     "type": "git",
-    "url": "https://github.com/commonform/commonform-validation.git"
+    "url": "https://github.com/commonform/commonform-validate.git"
   },
   "scripts": {
     "pre-commit": "npm run lint && npm run coverage",
@@ -41,5 +39,5 @@
     "coverage": "istanbul cover _mocha -- && istanbul check-coverage coverage/coverage.json",
     "test": "mocha"
   },
-  "version": "0.0.0-prerelease"
+  "version": "0.0.1"
 }

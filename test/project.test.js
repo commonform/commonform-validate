@@ -5,7 +5,7 @@ var packageJSON = require('../package.json');
 
 describe('Projects', function() {
   it('validates an example', function() {
-    expect(validation.isProject({
+    expect(validation.project({
       commonform: packageJSON.version,
       metadata: {title: 'Sample Project'},
       form: {content:[{field: 'Company Name'}]},

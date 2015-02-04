@@ -1,15 +1,15 @@
 var owasp = require('owasp-password-strength-test');
 var semver = require('semver');
 
-var hashing = require('commonform-hashing');
+var hash = require('commonform-hash');
 
 var toString = Object.prototype.toString;
 
-var isString = function(argument) {
+var string = function(argument) {
   return toString.call(argument) === '[object String]';
 };
 
-var isObject = function(argument) {
+var object = function(argument) {
   return toString.call(argument) === '[object Object]';
 };
 
@@ -37,13 +37,13 @@ var trimString = function(argument) {
     argument[argument.length - 1] !== ' ';
 };
 
-var isEmpty = function(argument) {
+var empty = function(argument) {
   return argument.length === 0;
 };
 
 var contentString = function(argument) {
-  return isString(argument) &&
-    !isEmpty(argument) &&
+  return string(argument) &&
+    !empty(argument) &&
     !hasContiguousSpaces(argument) &&
     onlyASCIIPrintable(argument);
 };
@@ -54,7 +54,7 @@ var hasContiguousStrings = function(argument) {
       return false;
     } else {
       var previous = array[index - 1];
-      return isString(previous) && isString(element);
+      return string(previous) && string(element);
     }
   });
 };
@@ -64,7 +64,7 @@ var hasOneProperty = function(object, key) {
   return keys.length === 1 && keys[0] === key;
 };
 
-var term = exports.isTerm = exports.isSummary = exports.isValue =
+var term = exports.term = exports.summary = exports.value =
   function(argument) {
     return contentString(argument) && trimString(argument);
   };
@@ -73,20 +73,20 @@ var summary = term;
 
 var simpleObject = function(type) {
   return function(argument) {
-    return isObject(argument) &&
+    return object(argument) &&
       hasOneProperty(argument, type) &&
       term(argument[type]);
   };
 };
 
-var definition = exports.isDefinition = simpleObject('definition');
-var use = exports.isUse = simpleObject('use');
-var field = exports.isField = simpleObject('field');
-var reference = exports.isReference = simpleObject('reference');
+var definition = exports.definition = simpleObject('definition');
+var use = exports.use = simpleObject('use');
+var field = exports.field = simpleObject('field');
+var reference = exports.reference = simpleObject('reference');
 
 var subFactory = function(formPredicate) {
   return function(argument) {
-    if (!isObject(argument)) {
+    if (!object(argument)) {
       return false;
     }
     var keys = Object.keys(argument);
@@ -104,14 +104,14 @@ var subFactory = function(formPredicate) {
   };
 };
 
-exports.isSubForm = subFactory(hashing.isDigest);
-exports.isNestedSubForm = function() {
-  return subFactory(exports.isNestedForm).apply(this, arguments);
+exports.subForm = subFactory(hash.isDigest);
+exports.nestedSubForm = function() {
+  return subFactory(exports.nestedForm).apply(this, arguments);
 };
 
 var formFactory = function(subFormPredicate) {
   return function(argument) {
-    if (!isObject(argument)) {
+    if (!object(argument)) {
       return false;
     }
     var content = argument.content;
@@ -145,19 +145,19 @@ var formFactory = function(subFormPredicate) {
   };
 };
 
-exports.isForm = formFactory(exports.isSubForm);
-var nestedForm = exports.isNestedForm =
-  formFactory(exports.isNestedSubForm);
+exports.form = formFactory(exports.subForm);
+var nestedForm = exports.nestedForm =
+  formFactory(exports.nestedSubForm);
 
-var version = exports.isVersion = function(argument) {
+var version = exports.version = function(argument) {
   return semver.valid(argument) &&
     semver.clean(argument) === argument;
 };
 
-var bookmarkName = exports.isBookmarkName = term;
+var bookmarkName = exports.bookmarkName = term;
 
-exports.isBookmark = function(argument) {
-  return isObject(argument) &&
+exports.bookmark = function(argument) {
+  return object(argument) &&
     argument.hasOwnProperty('version') &&
     version(argument.version) &&
 
@@ -165,27 +165,27 @@ exports.isBookmark = function(argument) {
     bookmarkName(argument.name) &&
 
     argument.hasOwnProperty('form') &&
-    hashing.isDigest(argument.form);
+    hash.isDigest(argument.form);
 };
 
 exports.AUTHORIZATIONS = [
  'administer', 'mirror', 'read', 'search', 'write'
 ];
 
-var authorization = exports.isAuthorization = function(argument) {
+var authorization = exports.authorization = function(argument) {
   return exports.AUTHORIZATIONS.indexOf(argument) > -1;
 };
 
-var password = exports.isPassword = function(argument) {
+var password = exports.password = function(argument) {
   return owasp.test(argument).errors.length === 0;
 };
 
-var userName = exports.isUserName = function(argument) {
+var userName = exports.userName = function(argument) {
   return term(argument) && argument.length > 5;
 };
 
-exports.isUser = function(argument) {
-  return isObject(argument) &&
+exports.user = function(argument) {
+  return object(argument) &&
     argument.hasOwnProperty('name') &&
     userName(argument.name) &&
 
@@ -193,7 +193,7 @@ exports.isUser = function(argument) {
     password(argument.password) &&
 
     argument.hasOwnProperty('authorizations') &&
-    !isEmpty(argument.authorizations) &&
+    !empty(argument.authorizations) &&
     argument.authorizations.every(function(element) {
       return authorization(element);
     });
@@ -215,27 +215,27 @@ var onlyStringValues = function(argument) {
   }
 };
 
-var values = exports.isValues = function(argument) {
-  return isObject(argument) &&
+var values = exports.values = function(argument) {
+  return object(argument) &&
     Object.keys(argument).every(function(key) {
-      return isString(argument[key]);
+      return string(argument[key]);
     });
 };
 
-var metadata = exports.isMetadata = function(argument) {
-  return isObject(argument) &&
+var metadata = exports.metadata = function(argument) {
+  return object(argument) &&
     argument.hasOwnProperty('title') &&
-    isString(argument.title) &&
+    string(argument.title) &&
     Object.keys(argument).length === 1;
 };
 
-var preferences = exports.isPreferences = function(argument) {
-  return isObject(argument) &&
+var preferences = exports.preferences = function(argument) {
+  return object(argument) &&
     onlyStringValues(argument);
 };
 
-exports.isProject = function(argument) {
-  return isObject(argument) &&
+exports.project = function(argument) {
+  return object(argument) &&
     argument.hasOwnProperty('commonform') &&
     version(argument.commonform) &&
 

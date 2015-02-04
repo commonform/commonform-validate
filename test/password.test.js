@@ -4,12 +4,12 @@ var validation = require('..');
 
 describe('Passwords', function() {
   it('cannot be trivial', function() {
-    expect(validation.isPassword('1234'))
+    expect(validation.password('1234'))
       .to.be.false();
   });
 
   it('can be passphrases', function() {
-    expect(validation.isPassword('mine hearties do program lisp'))
+    expect(validation.password('mine hearties do program lisp'))
       .to.be.true();
   });
 });
