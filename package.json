@@ -9,7 +9,7 @@
   },
   "description": "Common Form content object validation",
   "dependencies": {
-    "commonform-hash": "commonform/commonform-hash",
+    "commonform-hash": "0.1.x",
     "owasp-password-strength-test": "^1.1.0",
     "semver": "^4.2.0"
   },
@@ -43,5 +43,5 @@
     "test": "mocha",
     "travis-ci": "npm run pre-commit"
   },
-  "version": "0.0.1"
+  "version": "0.1.0"
 }

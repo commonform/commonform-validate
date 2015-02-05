@@ -2,8 +2,6 @@ var owasp = require('owasp-password-strength-test');
 var semver = require('semver');
 var hash = require('commonform-hash');
 
-exports.version = '0.0.1';
-
 var toString = Object.prototype.toString;
 
 var string = function(argument) {
@@ -252,3 +250,5 @@ exports.project = function(argument) {
     argument.hasOwnProperty('preferences') &&
     preferences(argument.preferences);
 };
+
+exports.version = '0.1.0';
