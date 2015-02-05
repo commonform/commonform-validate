@@ -1,7 +1,8 @@
 var owasp = require('owasp-password-strength-test');
 var semver = require('semver');
-
 var hash = require('commonform-hash');
+
+exports.version = '0.0.1';
 
 var toString = Object.prototype.toString;
 
@@ -149,7 +150,7 @@ exports.form = formFactory(exports.subForm);
 var nestedForm = exports.nestedForm =
   formFactory(exports.nestedSubForm);
 
-var version = exports.version = function(argument) {
+var semanticVersion = exports.semanticVersion = function(argument) {
   return semver.valid(argument) &&
     semver.clean(argument) === argument;
 };
@@ -159,7 +160,7 @@ var bookmarkName = exports.bookmarkName = term;
 exports.bookmark = function(argument) {
   return object(argument) &&
     argument.hasOwnProperty('version') &&
-    version(argument.version) &&
+    semanticVersion(argument.version) &&
 
     argument.hasOwnProperty('name') &&
     bookmarkName(argument.name) &&
@@ -237,7 +238,7 @@ var preferences = exports.preferences = function(argument) {
 exports.project = function(argument) {
   return object(argument) &&
     argument.hasOwnProperty('commonform') &&
-    version(argument.commonform) &&
+    semanticVersion(argument.commonform) &&
 
     argument.hasOwnProperty('form') &&
     nestedForm(argument.form) &&
