@@ -13,3 +13,24 @@ describe('Users', function() {
       .to.be.true();
   });
 });
+
+describe('Anonymous User', function() {
+  it('accepts a valid example', function() {
+    expect(validation.anonymousUser({
+      name: 'anonymous',
+      authorizations: ['read']
+    }))
+      .to.be.true();
+  });
+});
+
+describe('Librarian User', function() {
+  it('accepts a valid example', function() {
+    expect(validation.librarianUser({
+      name: 'librarian',
+      password: 'stray yahtzee miner harpsicord'
+
+    }))
+      .to.be.true();
+  });
+});

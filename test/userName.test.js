@@ -13,3 +13,20 @@ describe('User name', function() {
       .to.be.true();
   });
 });
+
+describe('Reserved User Name', function() {
+  it('accepts "anonymous"', function() {
+    expect(validation.reservedUserName('anonymous'))
+      .to.be.true();
+  });
+
+  it('accepts "librarian"', function() {
+    expect(validation.reservedUserName('anonymous'))
+      .to.be.true();
+  });
+
+  it('rejects "kemitchell"', function() {
+    expect(validation.reservedUserName('kemitchell'))
+      .to.be.false();
+  });
+});

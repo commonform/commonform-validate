@@ -183,19 +183,48 @@ var userName = exports.userName = function(argument) {
   return term(argument) && argument.length > 5;
 };
 
-exports.user = function(argument) {
-  return object(argument) &&
-    argument.hasOwnProperty('name') &&
-    userName(argument.name) &&
+var RESERVED_NAMES = ['librarian', 'anonymous'];
 
-    argument.hasOwnProperty('password') &&
-    password(argument.password) &&
+var reservedUserName = exports.reservedUserName = function(argument) {
+  return RESERVED_NAMES.indexOf(argument) > -1;
+};
 
-    argument.hasOwnProperty('authorizations') &&
+var hasValidAuthorizations = function(argument) {
+  return argument.hasOwnProperty('authorizations') &&
     !empty(argument.authorizations) &&
     argument.authorizations.every(function(element) {
       return authorization(element);
     });
+};
+
+var hasValidPassword = function(argument) {
+  return argument.hasOwnProperty('password') &&
+    password(argument.password);
+};
+
+exports.user = function(argument) {
+  return object(argument) &&
+    argument.hasOwnProperty('name') &&
+    userName(argument.name) &&
+    !reservedUserName(argument.name) &&
+    hasValidPassword(argument) &&
+    hasValidAuthorizations(argument);
+};
+
+exports.anonymousUser = function(argument) {
+  return object(argument) &&
+    argument.hasOwnProperty('name') &&
+    argument.name === 'anonymous' &&
+    // No password
+    hasValidAuthorizations(argument);
+};
+
+exports.librarianUser = function(argument) {
+  return object(argument) &&
+    argument.hasOwnProperty('name') &&
+    argument.name === 'librarian' &&
+    hasValidPassword(argument);
+    // No authorizations
 };
 
 var onlyStringValues = function(argument) {
