@@ -282,4 +282,4 @@ exports.project = function(argument) {
     preferences(argument.preferences);
 };
 
-exports.version = '0.1.0';
+exports.version = '0.1.1';
