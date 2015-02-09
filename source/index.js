@@ -153,7 +153,9 @@ var semanticVersion = exports.semanticVersion = function(argument) {
     semver.clean(argument) === argument;
 };
 
-var bookmarkName = exports.bookmarkName = term;
+var bookmarkName = exports.bookmarkName = function(argument) {
+  return term(argument) && argument.indexOf('@') < 0;
+};
 
 exports.bookmark = function(argument) {
   return object(argument) &&

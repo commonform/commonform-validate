@@ -17,4 +17,14 @@ describe('Bookmarks', function() {
     expect(validation.bookmark(bookmark))
       .to.be.true();
   });
+
+  it('cannot have names with "@"', function() {
+    var bookmark = {
+      name: 'Stock @ Agreement',
+      version: '2.0.1',
+      form: VALID_DIGEST
+    };
+    expect(validation.bookmark(bookmark))
+      .to.be.false();
+  });
 });
