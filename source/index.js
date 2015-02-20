@@ -154,7 +154,9 @@ var semanticVersion = exports.semanticVersion = function(argument) {
 };
 
 var bookmarkName = exports.bookmarkName = function(argument) {
-  return term(argument) && argument.indexOf('@') < 0;
+  return term(argument) &&
+    argument.toLowerCase() === argument &&
+    argument.indexOf('@') < 0;
 };
 
 exports.bookmark = function(argument) {
