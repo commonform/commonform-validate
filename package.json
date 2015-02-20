@@ -1,4 +1,7 @@
 {
+  "name": "commonform-validate",
+  "description": "Common Form content object validation",
+  "version": "0.1.1",
   "author": {
     "name": "Kyle E. Mitchell",
     "email": "kyle@kemitchell.com",
@@ -7,7 +10,6 @@
   "bugs": {
     "url": "https://github.com/commonform/commonform-validate/issues"
   },
-  "description": "Common Form content object validation",
   "dependencies": {
     "commonform-hash": "0.1.x",
     "owasp-password-strength-test": "^1.1.0",
@@ -30,7 +32,6 @@
   ],
   "license": "Apache-2.0",
   "main": "source/index",
-  "name": "commonform-validate",
   "repository": {
     "type": "git",
     "url": "https://github.com/commonform/commonform-validate.git"
@@ -42,6 +43,5 @@
     "pre-commit": "npm run lint && npm run check && npm run coverage",
     "test": "mocha",
     "travis-ci": "npm run pre-commit"
-  },
-  "version": "0.1.1"
+  }
 }
