@@ -11,13 +11,14 @@
     "url": "https://github.com/commonform/commonform-validate/issues"
   },
   "dependencies": {
-    "commonform-hash": "0.1.x",
     "owasp-password-strength-test": "^1.1.0",
     "semver": "^4.2.0"
   },
   "devDependencies": {
     "chai": "^1.10.0",
     "check-versions": "0.0.1",
+    "commonform-hash": "^0.3.0",
+    "immutable": "^3.6.2",
     "istanbul": "^0.3.5",
     "jscs": "^1.10.0",
     "jshint": "^2.6.0",

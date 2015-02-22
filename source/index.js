@@ -1,6 +1,5 @@
 var owasp = require('owasp-password-strength-test');
 var semver = require('semver');
-var hash = require('commonform-hash');
 
 var toString = Object.prototype.toString;
 
@@ -83,6 +82,13 @@ var use = exports.use = simpleObject('use');
 var field = exports.field = simpleObject('field');
 var reference = exports.reference = simpleObject('reference');
 
+var digest = exports.digest = (function() {
+  var DIGEST_RE = /^[abcdef0123456789]{64}$/;
+  return function(input) {
+    return typeof input === 'string' && DIGEST_RE.test(input);
+  };
+})();
+
 var subFactory = function(formPredicate) {
   return function(argument) {
     if (!object(argument)) {
@@ -103,7 +109,7 @@ var subFactory = function(formPredicate) {
   };
 };
 
-exports.subForm = subFactory(hash.isDigest);
+exports.subForm = subFactory(digest);
 exports.nestedSubForm = function() {
   return subFactory(exports.nestedForm).apply(this, arguments);
 };
@@ -168,7 +174,7 @@ exports.bookmark = function(argument) {
     bookmarkName(argument.name) &&
 
     argument.hasOwnProperty('form') &&
-    hash.isDigest(argument.form);
+    digest(argument.form);
 };
 
 exports.AUTHORIZATIONS = [
