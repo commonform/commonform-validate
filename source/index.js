@@ -290,4 +290,4 @@ exports.project = function(argument) {
     preferences(argument.preferences);
 };
 
-exports.version = '0.1.2';
+exports.version = '0.1.3';
