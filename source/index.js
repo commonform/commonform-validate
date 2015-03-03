@@ -1,5 +1,4 @@
 var Immutable = require('immutable');
-var owasp = require('owasp-password-strength-test');
 var semver = require('semver');
 
 var string = (function() {
@@ -212,83 +211,6 @@ exports.bookmark = function(argument) {
 exports.AUTHORIZATIONS = [
  'administer', 'mirror', 'read', 'search', 'write'
 ];
-
-var authorization = exports.authorization = function(argument) {
-  return exports.AUTHORIZATIONS.indexOf(argument) > -1;
-};
-
-var password = exports.password = function(argument) {
-  return owasp.test(argument).errors.length === 0;
-};
-
-var userName = exports.userName = function(argument) {
-  return (
-    term(argument) &&
-    argument.length > 5
-  );
-};
-
-var RESERVED_NAMES = ['librarian', 'anonymous'];
-
-var reservedUserName = exports.reservedUserName = function(argument) {
-  return RESERVED_NAMES.indexOf(argument) > -1;
-};
-
-var hasValidAuthorizations = function(argument) {
-  return (
-    argument.has('authorizations') &&
-    !argument.get('authorizations').isEmpty() &&
-    argument.get('authorizations').every(authorization)
-  );
-};
-
-var hasValidPassword = function(argument) {
-  return (
-    argument.has('password') &&
-    password(argument.get('password'))
-  );
-};
-
-exports.user = function(argument) {
-  var name = argument.get('name');
-  return (
-    isMap(argument) &&
-
-    argument.has('name') &&
-    userName(name) &&
-    !reservedUserName(name) &&
-
-    hasValidPassword(argument) &&
-
-    hasValidAuthorizations(argument)
-  );
-};
-
-exports.anonymousUser = function(argument) {
-  return (
-    isMap(argument) &&
-
-    argument.has('name') &&
-    argument.get('name') === 'anonymous' &&
-
-    // No password
-
-    hasValidAuthorizations(argument)
-  );
-};
-
-exports.librarianUser = function(argument) {
-  return (
-    isMap(argument) &&
-
-    argument.has('name') &&
-    argument.get('name') === 'librarian' &&
-
-    hasValidPassword(argument)
-
-    // No authorizations
-  );
-};
 
 var onlyStringValues = function(argument) {
   if (string(argument)) {
