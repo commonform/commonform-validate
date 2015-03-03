@@ -1,79 +1,96 @@
+var Immutable = require('immutable');
 var owasp = require('owasp-password-strength-test');
 var semver = require('semver');
 
-var toString = Object.prototype.toString;
+var string = (function() {
+  var toString = Object.prototype.toString;
+  return function(argument) {
+    return toString.call(argument) === '[object String]';
+  };
+})();
 
-var string = function(argument) {
-  return toString.call(argument) === '[object String]';
-};
-
-var object = function(argument) {
-  return toString.call(argument) === '[object Object]';
-};
+var isMap = Immutable.Map.isMap.bind(Immutable.Map);
+var isList = Immutable.List.isList.bind(Immutable.List);
 
 var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/;
 
-var onlyASCIIPrintable = function(argument) {
+var stringOfASCIIPrintable = function(argument) {
   return ASCII_PRINTABLE_RE.test(argument);
 };
 
-var hasContiguousSpaces = function(argument) {
+var stringWithContiguousSpaces = function(argument) {
   return argument.indexOf('  ') > -1;
 };
 
-var leadsWithSpace = function(argument) {
-  return argument[0][0] === ' ';
+var stringStartsWithSpace = function(argument) {
+  return (
+    string(argument) &&
+    argument[0] === ' '
+  );
 };
 
-var endsWithSpace = function(argument) {
-  var last = argument[argument.length - 1];
-  return last[last.length - 1] === ' ';
+var stringEndsWithSpace = function(argument) {
+  return (
+    string(argument) &&
+    argument[argument.length - 1] === ' '
+  );
 };
 
 var trimString = function(argument) {
-  return argument[0] !== ' ' &&
-    argument[argument.length - 1] !== ' ';
-};
-
-var empty = function(argument) {
-  return argument.length === 0;
+  return (
+    argument[0] !== ' ' &&
+    argument[argument.length - 1] !== ' '
+  );
 };
 
 var contentString = function(argument) {
-  return string(argument) &&
-    !empty(argument) &&
-    !hasContiguousSpaces(argument) &&
-    onlyASCIIPrintable(argument);
+  return (
+    string(argument) &&
+    argument.length > 0 &&
+    !stringWithContiguousSpaces(argument) &&
+    stringOfASCIIPrintable(argument)
+  );
 };
 
 var hasContiguousStrings = function(argument) {
-  return argument.some(function(element, index, array) {
+  return argument.some(function(element, index, list) {
     if (index === 0) {
       return false;
     } else {
-      var previous = array[index - 1];
-      return string(previous) && string(element);
+      var previous = list.get(index - 1);
+      return (
+        string(previous) &&
+        string(element)
+      );
     }
   });
 };
 
 var hasOneProperty = function(object, key) {
-  var keys = Object.keys(object);
-  return keys.length === 1 && keys[0] === key;
+  var keys = object.keySeq();
+  return (
+    keys.count() === 1 &&
+    keys.contains(key)
+  );
 };
 
 var term = exports.term = exports.summary = exports.value =
   function(argument) {
-    return contentString(argument) && trimString(argument);
+    return (
+      contentString(argument) &&
+      trimString(argument)
+    );
   };
 
 var summary = term;
 
 var simpleObject = function(type) {
   return function(argument) {
-    return object(argument) &&
+    return (
+      isMap(argument) &&
       hasOneProperty(argument, type) &&
-      term(argument[type]);
+      term(argument.get(type))
+    );
   };
 };
 
@@ -85,27 +102,33 @@ var reference = exports.reference = simpleObject('reference');
 var digest = exports.digest = (function() {
   var DIGEST_RE = /^[abcdef0123456789]{64}$/;
   return function(input) {
-    return typeof input === 'string' && DIGEST_RE.test(input);
+    return (
+      string(input) &&
+      DIGEST_RE.test(input)
+    );
   };
 })();
 
 var subFactory = function(formPredicate) {
   return function(argument) {
-    if (!object(argument)) {
-      return false;
-    }
-    var keys = Object.keys(argument);
     return (
-        keys.indexOf('summary') < 0 ||
-        summary(argument.summary)
+      isMap(argument) &&
+
+      (
+        !argument.has('summary') ||
+        summary(argument.get('summary'))
       ) &&
 
-      keys.indexOf('form') > -1 &&
-      formPredicate(argument.form) &&
+      argument.has('form') &&
+      formPredicate(argument.get('form')) &&
 
-      !keys.some(function(key) {
-        return ['form', 'summary'].indexOf(key) < 0;
-      });
+      argument.keySeq().every(function(key) {
+        return (
+          key === 'form' ||
+          key === 'summary'
+        );
+      })
+    );
   };
 };
 
@@ -116,16 +139,15 @@ exports.nestedSubForm = function() {
 
 var formFactory = function(subFormPredicate) {
   return function(argument) {
-    if (!object(argument)) {
+    if (!isMap(argument)) {
       return false;
     }
-    var content = argument.content;
-    var keys = Object.keys(argument);
+    var content = argument.get('content');
 
     return (
-      keys.indexOf('content') > -1 &&
-      Array.isArray(content) &&
-      content.length > 0 &&
+      argument.has('content') &&
+      isList(content) &&
+      content.count() > 0 &&
       content.every(function(element) {
         return contentString(element) ||
           subFormPredicate(element) ||
@@ -135,16 +157,19 @@ var formFactory = function(subFormPredicate) {
           field(element);
       }) &&
       !hasContiguousStrings(content) &&
-      !leadsWithSpace(content) &&
-      !endsWithSpace(content) &&
+      !stringStartsWithSpace(content.first()) &&
+      !stringEndsWithSpace(content.last()) &&
 
       (
-        keys.indexOf('conspicuous') < 0 ||
-        argument.conspicuous === 'true'
+        !argument.has('conspicuous') ||
+        argument.get('conspicuous') === 'true'
       ) &&
 
-      !keys.some(function(key) {
-        return ['conspicuous', 'content'].indexOf(key) < 0;
+      argument.keySeq().every(function(key) {
+        return (
+          key === 'content' ||
+          key === 'conspicuous'
+        );
       })
     );
   };
@@ -155,26 +180,33 @@ var nestedForm = exports.nestedForm =
   formFactory(exports.nestedSubForm);
 
 var semanticVersion = exports.semanticVersion = function(argument) {
-  return semver.valid(argument) &&
-    semver.clean(argument) === argument;
+  return (
+    semver.valid(argument) &&
+    semver.clean(argument) === argument
+  );
 };
 
 var bookmarkName = exports.bookmarkName = function(argument) {
-  return term(argument) &&
+  return (
+    term(argument) &&
     argument.toLowerCase() === argument &&
-    argument.indexOf('@') < 0;
+    argument.indexOf('@') < 0
+  );
 };
 
 exports.bookmark = function(argument) {
-  return object(argument) &&
-    argument.hasOwnProperty('version') &&
-    semanticVersion(argument.version) &&
+  return (
+    isMap(argument) &&
 
-    argument.hasOwnProperty('name') &&
-    bookmarkName(argument.name) &&
+    argument.has('version') &&
+    semanticVersion(argument.get('version')) &&
 
-    argument.hasOwnProperty('form') &&
-    digest(argument.form);
+    argument.has('name') &&
+    bookmarkName(argument.get('name')) &&
+
+    argument.has('form') &&
+    digest(argument.get('form'))
+  );
 };
 
 exports.AUTHORIZATIONS = [
@@ -190,7 +222,10 @@ var password = exports.password = function(argument) {
 };
 
 var userName = exports.userName = function(argument) {
-  return term(argument) && argument.length > 5;
+  return (
+    term(argument) &&
+    argument.length > 5
+  );
 };
 
 var RESERVED_NAMES = ['librarian', 'anonymous'];
@@ -200,94 +235,117 @@ var reservedUserName = exports.reservedUserName = function(argument) {
 };
 
 var hasValidAuthorizations = function(argument) {
-  return argument.hasOwnProperty('authorizations') &&
-    !empty(argument.authorizations) &&
-    argument.authorizations.every(function(element) {
-      return authorization(element);
-    });
+  return (
+    argument.has('authorizations') &&
+    !argument.get('authorizations').isEmpty() &&
+    argument.get('authorizations').every(authorization)
+  );
 };
 
 var hasValidPassword = function(argument) {
-  return argument.hasOwnProperty('password') &&
-    password(argument.password);
+  return (
+    argument.has('password') &&
+    password(argument.get('password'))
+  );
 };
 
 exports.user = function(argument) {
-  return object(argument) &&
-    argument.hasOwnProperty('name') &&
-    userName(argument.name) &&
-    !reservedUserName(argument.name) &&
+  var name = argument.get('name');
+  return (
+    isMap(argument) &&
+
+    argument.has('name') &&
+    userName(name) &&
+    !reservedUserName(name) &&
+
     hasValidPassword(argument) &&
-    hasValidAuthorizations(argument);
+
+    hasValidAuthorizations(argument)
+  );
 };
 
 exports.anonymousUser = function(argument) {
-  return object(argument) &&
-    argument.hasOwnProperty('name') &&
-    argument.name === 'anonymous' &&
+  return (
+    isMap(argument) &&
+
+    argument.has('name') &&
+    argument.get('name') === 'anonymous' &&
+
     // No password
-    hasValidAuthorizations(argument);
+
+    hasValidAuthorizations(argument)
+  );
 };
 
 exports.librarianUser = function(argument) {
-  return object(argument) &&
-    argument.hasOwnProperty('name') &&
-    argument.name === 'librarian' &&
-    hasValidPassword(argument);
+  return (
+    isMap(argument) &&
+
+    argument.has('name') &&
+    argument.get('name') === 'librarian' &&
+
+    hasValidPassword(argument)
+
     // No authorizations
+  );
 };
 
 var onlyStringValues = function(argument) {
-  var type = toString.call(argument);
-  switch (type) {
-    case '[object String]':
-      return true;
-    case '[object Object]':
-      return Object.keys(argument).every(function(key) {
-        return onlyStringValues(argument[key]);
-      });
-    case '[object Array]':
-      return argument.every(onlyStringValues);
-    default:
-      return false;
+  if (string(argument)) {
+    return true;
+  } else if (isMap(argument) || isList(argument)) {
+    return argument.every(onlyStringValues);
+  } else {
+    return false;
   }
 };
 
 var values = exports.values = function(argument) {
-  return object(argument) &&
-    Object.keys(argument).every(function(key) {
-      return string(argument[key]);
-    });
+  return (
+    isMap(argument) &&
+
+    argument.every(string)
+  );
 };
 
 var metadata = exports.metadata = function(argument) {
-  return object(argument) &&
-    argument.hasOwnProperty('title') &&
-    string(argument.title) &&
-    Object.keys(argument).length === 1;
+  return (
+    isMap(argument) &&
+
+    argument.has('title') &&
+    string(argument.get('title')) &&
+
+    argument.count() === 1
+  );
 };
 
 var preferences = exports.preferences = function(argument) {
-  return object(argument) &&
-    onlyStringValues(argument);
+  return (
+    isMap(argument) &&
+
+    onlyStringValues(argument)
+  );
 };
 
 exports.project = function(argument) {
-  return object(argument) &&
-    argument.hasOwnProperty('commonform') &&
-    semanticVersion(argument.commonform) &&
+  return (
+    isMap(argument) &&
 
-    argument.hasOwnProperty('form') &&
-    nestedForm(argument.form) &&
+    argument.has('commonform') &&
+    semanticVersion(argument.get('commonform')) &&
 
-    argument.hasOwnProperty('values') &&
-    values(argument.values) &&
+    argument.has('form') &&
+    nestedForm(argument.get('form')) &&
 
-    argument.hasOwnProperty('metadata') &&
-    metadata(argument.metadata) &&
+    argument.has('values') &&
+    values(argument.get('values')) &&
 
-    argument.hasOwnProperty('preferences') &&
-    preferences(argument.preferences);
+    argument.has('metadata') &&
+    metadata(argument.get('metadata')) &&
+
+    argument.has('preferences') &&
+    preferences(argument.get('preferences'))
+  );
 };
 
 exports.version = '0.1.3';

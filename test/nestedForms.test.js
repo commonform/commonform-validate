@@ -1,10 +1,11 @@
 /* jshint node: true, mocha: true */
+var Immutable = require('immutable');
 var expect = require('chai').expect;
 var validation = require('..');
 
 describe('Nested forms', function() {
   describe('real-world example', function() {
-    var first = {
+    var first = Immutable.fromJS({
       summary: 'Resume Performance',
       form: {
         content: [
@@ -12,8 +13,8 @@ describe('Nested forms', function() {
           {use: 'Agreement'}, ', or'
         ]
       }
-    };
-    var second = {
+    });
+    var second = Immutable.fromJS({
       summary: 'Conditions Precedent',
       form: {
         content: [
@@ -21,8 +22,8 @@ describe('Nested forms', function() {
           {use: 'Performing Party'}, '\'s obligations,'
         ]
       }
-    };
-    var example = {
+    });
+    var example = Immutable.fromJS({
       content: [
         'When the ', {use: 'Nonperforming Party'}, 'is able to',
         first, second, ' it shall immediately give the ',
@@ -30,7 +31,7 @@ describe('Nested forms', function() {
         'and shall resume performance under this ', {use: 'Agreement'},
         ' no later than two working days after the notice is delivered.'
       ]
-    };
+    });
 
     it('validates a real-world example', function() {
       expect(validation.nestedForm(example))
