@@ -118,12 +118,12 @@ var inclusionFactory = function(formPredicate) {
         heading(argument.get('heading'))
       ) &&
 
-      argument.has('include') &&
-      formPredicate(argument.get('include')) &&
+      argument.has('inclusion') &&
+      formPredicate(argument.get('inclusion')) &&
 
       argument.keySeq().every(function(key) {
         return (
-          key === 'include' ||
+          key === 'inclusion' ||
           key === 'heading'
         );
       })

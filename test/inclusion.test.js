@@ -6,16 +6,16 @@ var validation = require('..');
 var DIGEST = new Array(65).join('a');
 
 describe('Inclusions', function() {
-  it('can contain "heading" and "include" properties', function() {
+  it('can contain "heading" and "inclusion" properties', function() {
     expect(validation.inclusion(Immutable.fromJS({
       heading: 'Indemnification',
-      include: DIGEST
+      inclusion: DIGEST
     })))
       .to.be.true();
   });
 
   it('can omit "heading"', function() {
-    expect(validation.inclusion(Immutable.fromJS({include: DIGEST})))
+    expect(validation.inclusion(Immutable.fromJS({inclusion: DIGEST})))
       .to.be.true();
   });
 
