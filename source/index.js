@@ -270,4 +270,4 @@ exports.project = function(argument) {
   );
 };
 
-exports.version = '0.3.0';
+exports.version = '0.3.2';
