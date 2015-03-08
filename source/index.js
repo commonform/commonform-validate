@@ -73,7 +73,7 @@ var hasOneProperty = function(object, key) {
   );
 };
 
-var term = exports.term = exports.summary = exports.value =
+var term = exports.term = exports.heading = exports.value =
   function(argument) {
     return (
       contentString(argument) &&
@@ -81,7 +81,7 @@ var term = exports.term = exports.summary = exports.value =
     );
   };
 
-var summary = term;
+var heading = term;
 
 var simpleObject = function(type) {
   return function(argument) {
@@ -95,7 +95,7 @@ var simpleObject = function(type) {
 
 var definition = exports.definition = simpleObject('definition');
 var use = exports.use = simpleObject('use');
-var field = exports.field = simpleObject('field');
+var insertion = exports.insertion = simpleObject('insertion');
 var reference = exports.reference = simpleObject('reference');
 
 var digest = exports.digest = (function() {
@@ -114,8 +114,8 @@ var subFactory = function(formPredicate) {
       isMap(argument) &&
 
       (
-        !argument.has('summary') ||
-        summary(argument.get('summary'))
+        !argument.has('heading') ||
+        heading(argument.get('heading'))
       ) &&
 
       argument.has('form') &&
@@ -124,19 +124,19 @@ var subFactory = function(formPredicate) {
       argument.keySeq().every(function(key) {
         return (
           key === 'form' ||
-          key === 'summary'
+          key === 'heading'
         );
       })
     );
   };
 };
 
-exports.subForm = subFactory(digest);
-exports.nestedSubForm = function() {
+exports.inclusion = subFactory(digest);
+exports.nestedInclusion = function() {
   return subFactory(exports.nestedForm).apply(this, arguments);
 };
 
-var formFactory = function(subFormPredicate) {
+var formFactory = function(inclusionPredicate) {
   return function(argument) {
     if (!isMap(argument)) {
       return false;
@@ -149,11 +149,11 @@ var formFactory = function(subFormPredicate) {
       content.count() > 0 &&
       content.every(function(element) {
         return contentString(element) ||
-          subFormPredicate(element) ||
+          inclusionPredicate(element) ||
           use(element) ||
           reference(element) ||
           definition(element) ||
-          field(element);
+          insertion(element);
       }) &&
       !hasContiguousStrings(content) &&
       !stringStartsWithSpace(content.first()) &&
@@ -174,9 +174,9 @@ var formFactory = function(subFormPredicate) {
   };
 };
 
-exports.form = formFactory(exports.subForm);
+exports.form = formFactory(exports.inclusion);
 var nestedForm = exports.nestedForm =
-  formFactory(exports.nestedSubForm);
+  formFactory(exports.nestedInclusion);
 
 var semanticVersion = exports.semanticVersion = function(argument) {
   return (

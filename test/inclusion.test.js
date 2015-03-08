@@ -3,19 +3,19 @@ var Immutable = require('immutable');
 var expect = require('chai').expect;
 var validation = require('..');
 
-describe('Sub-forms', function() {
-  it('can contain "summary" and "form" properties', function() {
-    expect(validation.subForm(Immutable.fromJS({
-      summary: 'Indemnification',
-      form: new Array(65).join('a')
+var DIGEST = new Array(65).join('a');
+
+describe('Inclusions', function() {
+  it('can contain "heading" and "form" properties', function() {
+    expect(validation.inclusion(Immutable.fromJS({
+      heading: 'Indemnification',
+      form: DIGEST
     })))
       .to.be.true();
   });
 
-  it('can omit "summary"', function() {
-    expect(validation.subForm(Immutable.fromJS({
-      form: new Array(65).join('a')
-    })))
+  it('can omit "heading"', function() {
+    expect(validation.inclusion(Immutable.fromJS({form: DIGEST})))
       .to.be.true();
   });
 

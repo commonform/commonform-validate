@@ -13,9 +13,7 @@ describe('Projects', function() {
       },
       form: {
         content:[
-          {
-            field: 'Company Name'
-          }
+          {insertion: 'Company Name'}
         ]
       },
       values: {
