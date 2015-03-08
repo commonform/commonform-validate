@@ -13,7 +13,7 @@ describe('Projects', function() {
       },
       form: {
         content:[
-          {insertion: 'Company Name'}
+          {insert: 'Company Name'}
         ]
       },
       values: {

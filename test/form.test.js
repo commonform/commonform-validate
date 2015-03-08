@@ -103,7 +103,7 @@ describe('Forms', function() {
       content: [
         'Any dispute or controversy arising under or in connect with ' +
         'this ', {use: 'Agreement'}, ' shall be settled exclusively ' +
-        'by arbitration in the ', {insertion: 'Arbitration Venue'},
+        'by arbitration in the ', {insert: 'Arbitration Venue'},
         ', in accordance with the applicable rules of the American ' +
         'Arbitration Association then in effect.'
       ]

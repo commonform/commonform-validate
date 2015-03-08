@@ -5,7 +5,7 @@ var validation = require('..');
 
 describe('Insertions', function() {
   it('include a single property, "insertion"', function() {
-    expect(validation.insertion(Immutable.Map({insertion: 'Interest'})))
+    expect(validation.insertion(Immutable.Map({insert: 'Interest'})))
       .to.be.true();
   });
 });

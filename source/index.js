@@ -95,7 +95,7 @@ var simpleObject = function(type) {
 
 var definition = exports.definition = simpleObject('definition');
 var use = exports.use = simpleObject('use');
-var insertion = exports.insertion = simpleObject('insertion');
+var insertion = exports.insertion = simpleObject('insert');
 var reference = exports.reference = simpleObject('reference');
 
 var digest = exports.digest = (function() {
