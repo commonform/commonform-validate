@@ -7,7 +7,7 @@ describe('Nested forms', function() {
   describe('real-world example', function() {
     var first = Immutable.fromJS({
       heading: 'Resume Performance',
-      form: {
+      include: {
         content: [
           'resume performance of its obligations under this ',
           {use: 'Agreement'}, ', or'
@@ -16,7 +16,7 @@ describe('Nested forms', function() {
     });
     var second = Immutable.fromJS({
       heading: 'Conditions Precedent',
-      form: {
+      include: {
         content: [
           'satisfy the conditions precedent to the ',
           {use: 'Performing Party'}, '\'s obligations,'

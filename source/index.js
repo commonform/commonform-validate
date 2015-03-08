@@ -108,7 +108,7 @@ var digest = exports.digest = (function() {
   };
 })();
 
-var subFactory = function(formPredicate) {
+var inclusionFactory = function(formPredicate) {
   return function(argument) {
     return (
       isMap(argument) &&
@@ -118,12 +118,12 @@ var subFactory = function(formPredicate) {
         heading(argument.get('heading'))
       ) &&
 
-      argument.has('form') &&
-      formPredicate(argument.get('form')) &&
+      argument.has('include') &&
+      formPredicate(argument.get('include')) &&
 
       argument.keySeq().every(function(key) {
         return (
-          key === 'form' ||
+          key === 'include' ||
           key === 'heading'
         );
       })
@@ -131,9 +131,9 @@ var subFactory = function(formPredicate) {
   };
 };
 
-exports.inclusion = subFactory(digest);
+exports.inclusion = inclusionFactory(digest);
 exports.nestedInclusion = function() {
-  return subFactory(exports.nestedForm).apply(this, arguments);
+  return inclusionFactory(exports.nestedForm).apply(this, arguments);
 };
 
 var formFactory = function(inclusionPredicate) {
