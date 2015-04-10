@@ -10,6 +10,6 @@ describe('Definitions', function() {
   it('cannot be functions', function() {
     var f = function() {};
     f.definition = 'Merger Consideration';
-    expect(validation.definition(f)).to.be.false();
+    expect(validation.definition(f)).to.equal(false);
   });
 });
