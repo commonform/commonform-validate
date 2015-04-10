@@ -5,7 +5,6 @@ var string = require('is-string');
 var list = Immutable.List.isList.bind(Immutable.List);
 var map = Immutable.Map.isMap.bind(Immutable.Map);
 
-// Vocabulary
 var COMPRISE = 'comprise';
 var EMPHASIZE = 'emphasize';
 var INCLUDE = 'include';
@@ -13,160 +12,105 @@ var SUMMARIZE = 'summarize';
 var YES = 'yes';
 
 var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/;
+var DIGEST_RE = /^[abcdef0123456789]{64}$/;
 
-var stringOfASCIIPrintable = function(argument) {
-  return ASCII_PRINTABLE_RE.test(argument);
+var leadingSpaceString = function(argument) {
+  return string(argument) && argument[0] === ' ';
 };
 
-var stringWithContiguousSpaces = function(argument) {
-  return argument.indexOf('  ') > -1;
+var terminalSpaceString = function(argument) {
+  return string(argument) && argument[argument.length - 1] === ' ';
 };
 
-var stringStartsWithSpace = function(argument) {
-  return (
-    string(argument) &&
-    argument[0] === ' '
-  );
-};
-
-var stringEndsWithSpace = function(argument) {
-  return (
-    string(argument) &&
-    argument[argument.length - 1] === ' '
-  );
-};
-
-var trimString = function(argument) {
-  return (
-    argument[0] !== ' ' &&
-    argument[argument.length - 1] !== ' '
-  );
-};
-
-var contentString = function(argument) {
+var text = exports.text = function(argument) {
   return (
     string(argument) &&
     argument.length > 0 &&
-    !stringWithContiguousSpaces(argument) &&
-    stringOfASCIIPrintable(argument)
+    ASCII_PRINTABLE_RE.test(argument) &&
+    argument.indexOf('  ') < 0
   );
 };
 
-var hasContiguousStrings = function(argument) {
-  return contiguous(argument, string);
-};
-
-var hasOneProperty = function(object, key) {
-  var keys = object.keySeq();
-  return (
-    keys.count() === 1 &&
-    keys.contains(key)
-  );
+var hasProperty = function(argument, key, predicate) {
+  return argument.has(key) && predicate(argument.get(key));
 };
 
 var term = exports.term = exports.heading = exports.value =
   function(argument) {
     return (
-      contentString(argument) &&
-      trimString(argument)
+      text(argument) &&
+      argument[0] !== ' ' &&
+      argument[argument.length - 1] !== ' '
     );
   };
 
-var heading = term;
-
-var simpleObject = function(type) {
+var singlePropertyMap = function(permittedKey) {
   return function(argument) {
     return (
       map(argument) &&
-      hasOneProperty(argument, type) &&
-      term(argument.get(type))
+      argument.count() === 1 &&
+      argument.has(permittedKey) &&
+      term(argument.get(permittedKey))
     );
   };
 };
 
-var definition = exports.definition = simpleObject('define');
-var use = exports.use = simpleObject('use');
-var insertion = exports.insertion = simpleObject('insert');
-var reference = exports.reference = simpleObject('reference');
+var definition = exports.definition = singlePropertyMap('define');
+var use = exports.use = singlePropertyMap('use');
+var insertion = exports.insertion = singlePropertyMap('insert');
+var reference = exports.reference = singlePropertyMap('reference');
 
-var digest = exports.digest = (function() {
-  var DIGEST_RE = /^[abcdef0123456789]{64}$/;
-  return function(input) {
-    return (
-      string(input) &&
-      DIGEST_RE.test(input)
-    );
-  };
-})();
+var digest = exports.digest = function(input) {
+  return string(input) && DIGEST_RE.test(input);
+};
 
-var inclusionFactory = function(formPredicate) {
-  return function(argument) {
-    return (
-      map(argument) &&
-
+var inclusion = exports.inclusion = function(argument) {
+  return (
+    map(argument) &&
+    hasProperty(argument, INCLUDE, digest) && (
       (
-        !argument.has(SUMMARIZE) ||
-        heading(argument.get(SUMMARIZE))
-      ) &&
-
-      argument.has(INCLUDE) &&
-      formPredicate(argument.get(INCLUDE)) &&
-
-      argument.keySeq().every(function(key) {
-        return (
-          key === INCLUDE ||
-          key === SUMMARIZE
-        );
-      })
-    );
-  };
+        !argument.has(SUMMARIZE) &&
+        argument.count() === 1
+      ) || (
+        term(argument.get(SUMMARIZE)) &&
+        argument.count() === 2
+      )
+    )
+  );
 };
 
-exports.inclusion = inclusionFactory(digest);
-exports.nestedInclusion = function() {
-  return inclusionFactory(exports.nestedForm).apply(this, arguments);
+var contentPredicates = [
+  text, inclusion, use, reference, definition, insertion
+];
+
+var content = exports.content = function(argument) {
+  return contentPredicates.some(function(predicate) {
+    return predicate(argument);
+  });
 };
 
-var formFactory = function(inclusionPredicate) {
-  return function(argument) {
-    if (!map(argument)) {
-      return false;
-    }
-    var content = argument.get(COMPRISE);
-
-    return (
-      argument.has(COMPRISE) &&
-      list(content) &&
-      content.count() > 0 &&
-      content.every(function(element) {
-        return contentString(element) ||
-          inclusionPredicate(element) ||
-          use(element) ||
-          reference(element) ||
-          definition(element) ||
-          insertion(element);
-      }) &&
-      !hasContiguousStrings(content) &&
-      !stringStartsWithSpace(content.first()) &&
-      !stringEndsWithSpace(content.last()) &&
-
+exports.form = function(argument) {
+  return (
+    map(argument) &&
+    hasProperty(argument, COMPRISE, function(elements) {
+      return (
+        list(elements) &&
+        elements.count() > 0 &&
+        elements.every(content) &&
+        !contiguous(elements, string) &&
+        !leadingSpaceString(elements.first()) &&
+        !terminalSpaceString(elements.last())
+      );
+    }) && (
       (
-        !argument.has(EMPHASIZE) ||
-        argument.get(EMPHASIZE) === YES
-      ) &&
-
-      argument.keySeq().every(function(key) {
-        return (
-          key === COMPRISE ||
-          key === EMPHASIZE
-        );
-      })
-    );
-  };
+        !argument.has(EMPHASIZE) &&
+        argument.count() === 1
+      ) || (
+        argument.get(EMPHASIZE) === YES &&
+        argument.count() === 2
+      )
+    )
+  );
 };
-
-exports.form = formFactory(exports.inclusion);
-exports.nestedForm = exports.nestedForm =
-  formFactory(exports.nestedInclusion);
 
 exports.version = '1.0.0';
