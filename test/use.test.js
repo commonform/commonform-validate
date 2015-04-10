@@ -5,7 +5,8 @@ var validation = require('..');
 
 describe('Use', function() {
   it('contain a single property, "use"', function() {
-    expect(validation.use(Immutable.Map({use: 'Merger Consideration'})))
-      .to.be.true();
+    expect(
+      validation.use(Immutable.Map({use: 'Merger Consideration'}))
+    ).to.be.true();
   });
 });

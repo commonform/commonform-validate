@@ -4,17 +4,15 @@ var expect = require('chai').expect;
 var validation = require('..');
 
 describe('Definitions', function() {
-  it('contain a single property, "define"', function() {
+  it('contain a single property, "definition"', function() {
     expect(validation.definition(
-      Immutable.fromJS({define: 'Consideration'})
-    ))
-      .to.be.true();
+      Immutable.fromJS({definition: 'Consideration'})
+    )).to.be.true();
   });
 
   it('cannot be functions', function() {
     var f = function() {};
-    f.define = 'Merger Consideration';
-    expect(validation.definition(f))
-      .to.be.false();
+    f.definition = 'Merger Consideration';
+    expect(validation.definition(f)).to.be.false();
   });
 });

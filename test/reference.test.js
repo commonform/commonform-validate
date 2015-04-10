@@ -5,9 +5,8 @@ var validation = require('..');
 
 describe('References', function() {
   it('contain a single property, "reference"', function() {
-    expect(validation.reference(Immutable.fromJS({
-      reference: 'Liability'
-    })))
-      .to.be.true();
+    expect(
+      validation.reference(Immutable.fromJS({reference: 'Liability'}))
+    ).to.be.true();
   });
 });

@@ -5,11 +5,9 @@ var string = require('is-string');
 var list = Immutable.List.isList.bind(Immutable.List);
 var map = Immutable.Map.isMap.bind(Immutable.Map);
 
-var COMPRISE = 'comprise';
-var EMPHASIZE = 'emphasize';
-var INCLUDE = 'include';
-var SUMMARIZE = 'summarize';
-var YES = 'yes';
+var CONTENT = 'content';
+var CONSPICUOUS = 'conspicuous';
+var HEADING = 'heading';
 
 var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/;
 var DIGEST_RE = /^[abcdef0123456789]{64}$/;
@@ -55,24 +53,24 @@ var singlePropertyMap = function(permittedKey) {
   };
 };
 
-var definition = exports.definition = singlePropertyMap('define');
+var definition = exports.definition = singlePropertyMap('definition');
 var use = exports.use = singlePropertyMap('use');
-var insertion = exports.insertion = singlePropertyMap('insert');
+var blank = exports.blank = singlePropertyMap('blank');
 var reference = exports.reference = singlePropertyMap('reference');
 
 var digest = exports.digest = function(input) {
   return string(input) && DIGEST_RE.test(input);
 };
 
-var inclusion = exports.inclusion = function(argument) {
+var child = exports.child = function(argument) {
   return (
     map(argument) &&
-    hasProperty(argument, INCLUDE, digest) && (
+    hasProperty(argument, 'digest', digest) && (
       (
-        !argument.has(SUMMARIZE) &&
+        !argument.has(HEADING) &&
         argument.count() === 1
       ) || (
-        term(argument.get(SUMMARIZE)) &&
+        term(argument.get(HEADING)) &&
         argument.count() === 2
       )
     )
@@ -80,7 +78,7 @@ var inclusion = exports.inclusion = function(argument) {
 };
 
 var contentPredicates = [
-  text, inclusion, use, reference, definition, insertion
+  text, child, use, reference, definition, blank
 ];
 
 var content = exports.content = function(argument) {
@@ -92,7 +90,7 @@ var content = exports.content = function(argument) {
 exports.form = function(argument) {
   return (
     map(argument) &&
-    hasProperty(argument, COMPRISE, function(elements) {
+    hasProperty(argument, CONTENT, function(elements) {
       return (
         list(elements) &&
         elements.count() > 0 &&
@@ -103,12 +101,9 @@ exports.form = function(argument) {
       );
     }) && (
       (
-        !argument.has(EMPHASIZE) &&
-        argument.count() === 1
-      ) || (
-        argument.get(EMPHASIZE) === YES &&
+        argument.get(CONSPICUOUS) === 'yes' &&
         argument.count() === 2
-      )
+      ) || argument.count() === 1
     )
   );
 };
