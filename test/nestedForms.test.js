@@ -6,25 +6,25 @@ var validation = require('..');
 describe('Nested forms', function() {
   describe('real-world example', function() {
     var first = Immutable.fromJS({
-      heading: 'Resume Performance',
-      inclusion: {
-        content: [
+      summarize: 'Resume Performance',
+      include: {
+        comprise: [
           'resume performance of its obligations under this ',
           {use: 'Agreement'}, ', or'
         ]
       }
     });
     var second = Immutable.fromJS({
-      heading: 'Conditions Precedent',
-      inclusion: {
-        content: [
+      summarize: 'Conditions Precedent',
+      include: {
+        comprise: [
           'satisfy the conditions precedent to the ',
           {use: 'Performing Party'}, '\'s obligations,'
         ]
       }
     });
     var example = Immutable.fromJS({
-      content: [
+      comprise: [
         'When the ', {use: 'Nonperforming Party'}, 'is able to',
         first, second, ' it shall immediately give the ',
         {use: 'Performing Party'}, 'written notice to that effect ' +

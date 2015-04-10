@@ -1,7 +1,7 @@
 {
   "name": "commonform-validate",
-  "description": "Common Form content object validation",
-  "version": "0.3.2",
+  "description": "validate Common Form content objects",
+  "version": "1.0.0",
   "author": {
     "name": "Kyle E. Mitchell",
     "email": "kyle@kemitchell.com",
@@ -11,14 +11,14 @@
     "url": "https://github.com/commonform/commonform-validate/issues"
   },
   "dependencies": {
+    "contiguous": "^1.0.0",
     "immutable": "^3.6.2",
-    "semver": "^4.2.0"
+    "is-string": "^1.0.4"
   },
   "devDependencies": {
     "chai": "^1.10.0",
     "check-versions": "0.0.1",
     "commonform-hash": "^0.3.0",
-    "immutable": "^3.6.2",
     "istanbul": "^0.3.5",
     "jscs": "^1.10.0",
     "jshint": "^2.6.0",
@@ -33,6 +33,9 @@
   ],
   "license": "Apache-2.0",
   "main": "source/index",
+  "peerDependencies": {
+    "commonform": "1.x"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/commonform/commonform-validate.git"
@@ -40,6 +43,7 @@
   "scripts": {
     "check": "check-versions --check-module",
     "coverage": "istanbul cover _mocha -- && istanbul check-coverage coverage/coverage.json",
+    "documentation": "dot -T svg documentation/relationships.dot > documentation/relationships.svg",
     "lint": "jshint source test && jscs source test",
     "pre-commit": "npm run lint && npm run coverage",
     "test": "mocha",

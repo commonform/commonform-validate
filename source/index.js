@@ -1,15 +1,16 @@
 var Immutable = require('immutable');
-var semver = require('semver');
+var contiguous = require('contiguous');
+var string = require('is-string');
 
-var string = (function() {
-  var toString = Object.prototype.toString;
-  return function(argument) {
-    return toString.call(argument) === '[object String]';
-  };
-})();
+var list = Immutable.List.isList.bind(Immutable.List);
+var map = Immutable.Map.isMap.bind(Immutable.Map);
 
-var isMap = Immutable.Map.isMap.bind(Immutable.Map);
-var isList = Immutable.List.isList.bind(Immutable.List);
+// Vocabulary
+var COMPRISE = 'comprise';
+var EMPHASIZE = 'emphasize';
+var INCLUDE = 'include';
+var SUMMARIZE = 'summarize';
+var YES = 'yes';
 
 var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/;
 
@@ -52,17 +53,7 @@ var contentString = function(argument) {
 };
 
 var hasContiguousStrings = function(argument) {
-  return argument.some(function(element, index, list) {
-    if (index === 0) {
-      return false;
-    } else {
-      var previous = list.get(index - 1);
-      return (
-        string(previous) &&
-        string(element)
-      );
-    }
-  });
+  return contiguous(argument, string);
 };
 
 var hasOneProperty = function(object, key) {
@@ -86,16 +77,16 @@ var heading = term;
 var simpleObject = function(type) {
   return function(argument) {
     return (
-      isMap(argument) &&
+      map(argument) &&
       hasOneProperty(argument, type) &&
       term(argument.get(type))
     );
   };
 };
 
-var definition = exports.definition = simpleObject('definition');
+var definition = exports.definition = simpleObject('define');
 var use = exports.use = simpleObject('use');
-var insertion = exports.insertion = simpleObject('insertion');
+var insertion = exports.insertion = simpleObject('insert');
 var reference = exports.reference = simpleObject('reference');
 
 var digest = exports.digest = (function() {
@@ -111,20 +102,20 @@ var digest = exports.digest = (function() {
 var inclusionFactory = function(formPredicate) {
   return function(argument) {
     return (
-      isMap(argument) &&
+      map(argument) &&
 
       (
-        !argument.has('heading') ||
-        heading(argument.get('heading'))
+        !argument.has(SUMMARIZE) ||
+        heading(argument.get(SUMMARIZE))
       ) &&
 
-      argument.has('inclusion') &&
-      formPredicate(argument.get('inclusion')) &&
+      argument.has(INCLUDE) &&
+      formPredicate(argument.get(INCLUDE)) &&
 
       argument.keySeq().every(function(key) {
         return (
-          key === 'inclusion' ||
-          key === 'heading'
+          key === INCLUDE ||
+          key === SUMMARIZE
         );
       })
     );
@@ -138,14 +129,14 @@ exports.nestedInclusion = function() {
 
 var formFactory = function(inclusionPredicate) {
   return function(argument) {
-    if (!isMap(argument)) {
+    if (!map(argument)) {
       return false;
     }
-    var content = argument.get('content');
+    var content = argument.get(COMPRISE);
 
     return (
-      argument.has('content') &&
-      isList(content) &&
+      argument.has(COMPRISE) &&
+      list(content) &&
       content.count() > 0 &&
       content.every(function(element) {
         return contentString(element) ||
@@ -160,14 +151,14 @@ var formFactory = function(inclusionPredicate) {
       !stringEndsWithSpace(content.last()) &&
 
       (
-        !argument.has('conspicuous') ||
-        argument.get('conspicuous') === 'true'
+        !argument.has(EMPHASIZE) ||
+        argument.get(EMPHASIZE) === YES
       ) &&
 
       argument.keySeq().every(function(key) {
         return (
-          key === 'content' ||
-          key === 'conspicuous'
+          key === COMPRISE ||
+          key === EMPHASIZE
         );
       })
     );
@@ -175,99 +166,7 @@ var formFactory = function(inclusionPredicate) {
 };
 
 exports.form = formFactory(exports.inclusion);
-var nestedForm = exports.nestedForm =
+exports.nestedForm = exports.nestedForm =
   formFactory(exports.nestedInclusion);
 
-var semanticVersion = exports.semanticVersion = function(argument) {
-  return (
-    semver.valid(argument) &&
-    semver.clean(argument) === argument
-  );
-};
-
-var bookmarkName = exports.bookmarkName = function(argument) {
-  return (
-    term(argument) &&
-    argument.toLowerCase() === argument &&
-    argument.indexOf('@') < 0
-  );
-};
-
-exports.bookmark = function(argument) {
-  return (
-    isMap(argument) &&
-
-    argument.has('version') &&
-    semanticVersion(argument.get('version')) &&
-
-    argument.has('name') &&
-    bookmarkName(argument.get('name')) &&
-
-    argument.has('form') &&
-    digest(argument.get('form'))
-  );
-};
-
-exports.AUTHORIZATIONS = [
- 'administer', 'mirror', 'read', 'search', 'write'
-];
-
-var onlyStringValues = function(argument) {
-  if (string(argument)) {
-    return true;
-  } else if (isMap(argument) || isList(argument)) {
-    return argument.every(onlyStringValues);
-  } else {
-    return false;
-  }
-};
-
-var values = exports.values = function(argument) {
-  return (
-    isMap(argument) &&
-
-    argument.every(string)
-  );
-};
-
-var metadata = exports.metadata = function(argument) {
-  return (
-    isMap(argument) &&
-
-    argument.has('title') &&
-    string(argument.get('title')) &&
-
-    argument.count() === 1
-  );
-};
-
-var preferences = exports.preferences = function(argument) {
-  return (
-    isMap(argument) &&
-
-    onlyStringValues(argument)
-  );
-};
-
-exports.project = function(argument) {
-  return (
-    isMap(argument) &&
-
-    argument.has('commonform') &&
-    semanticVersion(argument.get('commonform')) &&
-
-    argument.has('form') &&
-    nestedForm(argument.get('form')) &&
-
-    argument.has('values') &&
-    values(argument.get('values')) &&
-
-    argument.has('metadata') &&
-    metadata(argument.get('metadata')) &&
-
-    argument.has('preferences') &&
-    preferences(argument.get('preferences'))
-  );
-};
-
-exports.version = '0.3.2';
+exports.version = '1.0.0';

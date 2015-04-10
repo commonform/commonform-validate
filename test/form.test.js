@@ -4,22 +4,22 @@ var expect = require('chai').expect;
 var validation = require('..');
 
 describe('Forms', function() {
-  it('must have .content', function() {
+  it('must have .comprise', function() {
     expect(validation.form(Immutable.Map()))
       .to.be.false();
   });
 
-  it('may have .conspicuos', function() {
+  it('may have .emphasize', function() {
     expect(validation.form(Immutable.fromJS({
-      content: ['Test'],
-      conspicuous: 'true'
+      comprise: ['Test'],
+      emphasize: 'yes'
     })))
       .to.be.true();
   });
 
   it('cannot have other properties', function() {
     expect(validation.form(Immutable.fromJS({
-      content: ['Test'],
+      comprise: ['Test'],
       extra: false
     })))
       .to.be.false();
@@ -27,72 +27,72 @@ describe('Forms', function() {
 
   it('cannot be functions', function() {
     var f = function() {};
-    f.content = ['Text'];
+    f.comprise = ['Text'];
     expect(validation.form(f))
       .to.be.false();
   });
 
-  describe('.content', function() {
+  describe('.comprise', function() {
     it('must be an array', function() {
-      expect(validation.form(Immutable.fromJS({content: 'Test'})))
+      expect(validation.form(Immutable.fromJS({comprise: 'Test'})))
         .to.be.false();
     });
 
     it('cannot be empty', function() {
-      expect(validation.form(Immutable.fromJS({content: []})))
+      expect(validation.form(Immutable.fromJS({comprise: []})))
         .to.be.false();
     });
 
     it('cannot contain contiguous strings', function() {
       expect(validation.form(Immutable.fromJS({
-        content: ['a', 'b']
+        comprise: ['a', 'b']
       })))
         .to.be.false();
     });
 
     it('cannot contain empty strings', function() {
       expect(validation.form(Immutable.fromJS({
-        content: ['']
+        comprise: ['']
       })))
         .to.be.false();
     });
 
     it('cannot lead with a space', function() {
       expect(validation.form(Immutable.fromJS({
-        content: [' text']
+        comprise: [' text']
       })))
         .to.be.false();
     });
 
     it('cannot end with a space', function() {
       expect(validation.form(Immutable.fromJS({
-        content: ['text ']
+        comprise: ['text ']
       })))
         .to.be.false();
     });
   });
 
-  describe('.conspicuous', function() {
-    it('can be "true"', function() {
+  describe('.emphasize', function() {
+    it('can be "yes"', function() {
       expect(validation.form(Immutable.fromJS({
-        content: ['A'],
-        conspicuous: 'true'
+        comprise: ['A'],
+        emphasize: 'yes'
       })))
         .to.be.true();
     });
 
     it('cannot be (boolean) true', function() {
       expect(validation.form(Immutable.fromJS({
-        content: ['B'],
-        conspicuous: true
+        comprise: ['B'],
+        emphasize: true
       })))
         .to.be.false();
     });
 
     it('cannot be null', function() {
       expect(validation.form(Immutable.fromJS({
-        content: ['Test'],
-        conspicuous: null
+        comprise: ['Test'],
+        emphasize: null
       })))
         .to.be.false();
     });
@@ -100,10 +100,10 @@ describe('Forms', function() {
 
   it('include the real-world example', function() {
     var form = Immutable.fromJS({
-      content: [
+      comprise: [
         'Any dispute or controversy arising under or in connect with ' +
         'this ', {use: 'Agreement'}, ' shall be settled exclusively ' +
-        'by arbitration in the ', {insertion: 'Arbitration Venue'},
+        'by arbitration in the ', {insert: 'Arbitration Venue'},
         ', in accordance with the applicable rules of the American ' +
         'Arbitration Association then in effect.'
       ]
