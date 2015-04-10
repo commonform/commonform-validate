@@ -1,5 +1,4 @@
 /* jshint node: true, mocha: true */
-var Immutable = require('immutable');
 var expect = require('chai').expect;
 var validate = require('..');
 
@@ -8,17 +7,15 @@ var DIGEST = new Array(65).join('a');
 describe('Children', function() {
   it('can contain "heading" and "digest" properties', function() {
     expect(
-      validate.child(Immutable.fromJS({
+      validate.child({
         heading: 'Indemnification',
         digest: DIGEST
-      }))
+      })
     ).to.equal(true);
   });
 
   it('can omit "summarize"', function() {
-    expect(
-      validate.child(Immutable.fromJS({digest: DIGEST}))
-    ).to.equal(true);
+    expect(validate.child({digest: DIGEST})).to.equal(true);
   });
 
   it('cannot be functions', function() {

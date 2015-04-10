@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "contiguous": "^1.0.0",
-    "immutable": "^3.6.2",
+    "is-array": "^1.0.1",
+    "is-object": "^1.0.1",
     "is-string": "^1.0.4"
   },
   "devDependencies": {

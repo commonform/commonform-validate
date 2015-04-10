@@ -1,13 +1,10 @@
 /* jshint node: true, mocha: true */
-var Immutable = require('immutable');
 var expect = require('chai').expect;
 var validation = require('..');
 
 describe('Definitions', function() {
   it('contain a single property, "definition"', function() {
-    expect(validation.definition(
-      Immutable.fromJS({definition: 'Consideration'})
-    )).to.be.true();
+    expect(validation.definition({definition: 'Cash'})).to.equal(true);
   });
 
   it('cannot be functions', function() {

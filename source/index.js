@@ -1,16 +1,14 @@
-var Immutable = require('immutable');
+var array = require('is-array');
 var contiguous = require('contiguous');
+var object = require('is-object');
 var string = require('is-string');
-
-var list = Immutable.List.isList.bind(Immutable.List);
-var map = Immutable.Map.isMap.bind(Immutable.Map);
-
-var CONTENT = 'content';
-var CONSPICUOUS = 'conspicuous';
-var HEADING = 'heading';
 
 var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/;
 var DIGEST_RE = /^[abcdef0123456789]{64}$/;
+
+var keyCount = function(argument) {
+  return Object.keys(argument).length;
+};
 
 var leadingSpaceString = function(argument) {
   return string(argument) && argument[0] === ' ';
@@ -30,7 +28,7 @@ var text = exports.text = function(argument) {
 };
 
 var hasProperty = function(argument, key, predicate) {
-  return argument.has(key) && predicate(argument.get(key));
+  return key in argument && predicate(argument[key]);
 };
 
 var term = exports.term = exports.heading = exports.value =
@@ -42,21 +40,21 @@ var term = exports.term = exports.heading = exports.value =
     );
   };
 
-var singlePropertyMap = function(permittedKey) {
+var singleProperty = function(permittedKey) {
   return function(argument) {
     return (
-      map(argument) &&
-      argument.count() === 1 &&
-      argument.has(permittedKey) &&
-      term(argument.get(permittedKey))
+      object(argument) &&
+      keyCount(argument) === 1 &&
+      permittedKey in argument &&
+      term(argument[permittedKey])
     );
   };
 };
 
-var definition = exports.definition = singlePropertyMap('definition');
-var use = exports.use = singlePropertyMap('use');
-var blank = exports.blank = singlePropertyMap('blank');
-var reference = exports.reference = singlePropertyMap('reference');
+var blank = exports.blank = singleProperty('blank');
+var definition = exports.definition = singleProperty('definition');
+var reference = exports.reference = singleProperty('reference');
+var use = exports.use = singleProperty('use');
 
 var digest = exports.digest = function(input) {
   return string(input) && DIGEST_RE.test(input);
@@ -64,21 +62,19 @@ var digest = exports.digest = function(input) {
 
 var child = exports.child = function(argument) {
   return (
-    map(argument) &&
-    hasProperty(argument, 'digest', digest) && (
+    object(argument) &&
+    hasProperty(argument, 'digest', digest) &&
+    (
       (
-        !argument.has(HEADING) &&
-        argument.count() === 1
-      ) || (
-        term(argument.get(HEADING)) &&
-        argument.count() === 2
-      )
+        hasProperty(argument, 'heading', term) &&
+        keyCount(argument) === 2
+      ) || keyCount(argument) === 1
     )
   );
 };
 
 var contentPredicates = [
-  text, child, use, reference, definition, blank
+  blank, child, definition, reference, text, use
 ];
 
 var content = exports.content = function(argument) {
@@ -89,21 +85,21 @@ var content = exports.content = function(argument) {
 
 exports.form = function(argument) {
   return (
-    map(argument) &&
-    hasProperty(argument, CONTENT, function(elements) {
+    object(argument) &&
+    hasProperty(argument, 'content', function(elements) {
       return (
-        list(elements) &&
-        elements.count() > 0 &&
+        array(elements) &&
+        elements.length > 0 &&
         elements.every(content) &&
         !contiguous(elements, string) &&
-        !leadingSpaceString(elements.first()) &&
-        !terminalSpaceString(elements.last())
+        !leadingSpaceString(elements[0]) &&
+        !terminalSpaceString(elements[elements.length - 1])
       );
     }) && (
       (
-        argument.get(CONSPICUOUS) === 'yes' &&
-        argument.count() === 2
-      ) || argument.count() === 1
+        argument.conspicuous === 'yes' &&
+        keyCount(argument) === 2
+      ) || keyCount(argument) === 1
     )
   );
 };
