@@ -2,25 +2,31 @@
 var expect = require('chai').expect;
 var validate = require('..');
 
-var DIGEST = new Array(65).join('a');
+var child = {
+  content: ['Child text']
+};
 
 describe('Children', function() {
-  it('can contain "heading" and "digest" properties', function() {
+  it('can contain "heading" and "form" properties', function() {
     expect(
       validate.child({
         heading: 'Indemnification',
-        digest: DIGEST
+        form: child
       })
     ).to.equal(true);
   });
 
   it('can omit "summarize"', function() {
-    expect(validate.child({digest: DIGEST})).to.equal(true);
+    expect(
+      validate.child({form: child})
+    ).to.equal(true);
   });
 
   it('cannot be functions', function() {
     var f = function() {};
-    f.digest = DIGEST;
-    expect(validate.child(f)).to.equal(false);
+    f.form = child;
+    expect(
+      validate.child(f)
+    ).to.equal(false);
   });
 });

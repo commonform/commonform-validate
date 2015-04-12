@@ -4,7 +4,6 @@ var object = require('is-object');
 var string = require('is-string');
 
 var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/;
-var DIGEST_RE = /^[abcdef0123456789]{64}$/;
 
 var keyCount = function(argument) {
   return Object.keys(argument).length;
@@ -56,14 +55,12 @@ var definition = exports.definition = singleProperty('definition');
 var reference = exports.reference = singleProperty('reference');
 var use = exports.use = singleProperty('use');
 
-var digest = exports.digest = function(input) {
-  return string(input) && DIGEST_RE.test(input);
-};
+var form;
 
 var child = exports.child = function(argument) {
   return (
     object(argument) &&
-    hasProperty(argument, 'digest', digest) &&
+    hasProperty(argument, 'form', form) &&
     (
       (
         hasProperty(argument, 'heading', term) &&
@@ -73,17 +70,15 @@ var child = exports.child = function(argument) {
   );
 };
 
-var contentPredicates = [
-  blank, child, definition, reference, text, use
-];
+var predicates = [blank, child, definition, reference, text, use];
 
 var content = exports.content = function(argument) {
-  return contentPredicates.some(function(predicate) {
+  return predicates.some(function(predicate) {
     return predicate(argument);
   });
 };
 
-exports.form = function(argument) {
+form = exports.form = function(argument) {
   return (
     object(argument) &&
     hasProperty(argument, 'content', function(elements) {
