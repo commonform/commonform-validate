@@ -16,7 +16,7 @@ describe('Children', function() {
     ).to.equal(true);
   });
 
-  it('can omit "summarize"', function() {
+  it('can omit "heading"', function() {
     expect(
       validate.child({form: child})
     ).to.equal(true);

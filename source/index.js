@@ -3,57 +3,54 @@ var contiguous = require('contiguous');
 var object = require('is-object');
 var string = require('is-string');
 
-var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/;
-
 var keyCount = function(argument) {
   return Object.keys(argument).length;
 };
 
-var leadingSpaceString = function(argument) {
-  return string(argument) && argument[0] === ' ';
-};
-
-var terminalSpaceString = function(argument) {
-  return string(argument) && argument[argument.length - 1] === ' ';
-};
-
-var text = exports.text = function(argument) {
+var hasProperty = function(argument, key, predicate) {
   return (
-    string(argument) &&
-    argument.length > 0 &&
-    ASCII_PRINTABLE_RE.test(argument) &&
-    argument.indexOf('  ') < 0
+    argument.hasOwnProperty(key) &&
+    predicate(argument[key])
   );
 };
 
-var hasProperty = function(argument, key, predicate) {
-  return key in argument && predicate(argument[key]);
-};
+var text = (function() {
+  var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/;
 
-var term = exports.term = exports.heading = exports.value =
-  function(argument) {
+  return function(argument) {
     return (
-      text(argument) &&
-      argument[0] !== ' ' &&
-      argument[argument.length - 1] !== ' '
+      string(argument) &&
+      argument.length > 0 &&
+      argument.indexOf('  ') < 0 &&
+      ASCII_PRINTABLE_RE.test(argument)
     );
   };
+})();
 
-var singleProperty = function(permittedKey) {
+var term = function(argument) {
+  return (
+    text(argument) &&
+    argument[0] !== ' ' &&
+    argument[argument.length - 1] !== ' '
+  );
+};
+
+var simpleObject = function(permittedKey) {
   return function(argument) {
     return (
       object(argument) &&
       keyCount(argument) === 1 &&
-      permittedKey in argument &&
-      term(argument[permittedKey])
+      hasProperty(argument, permittedKey, term)
     );
   };
 };
 
-var blank = exports.blank = singleProperty('blank');
-var definition = exports.definition = singleProperty('definition');
-var reference = exports.reference = singleProperty('reference');
-var use = exports.use = singleProperty('use');
+exports.term = exports.heading = exports.value = term;
+
+var blank = exports.blank = simpleObject('blank');
+var definition = exports.definition = simpleObject('definition');
+var reference = exports.reference = simpleObject('reference');
+var use = exports.use = simpleObject('use');
 
 var form;
 
@@ -62,41 +59,62 @@ var child = exports.child = function(argument) {
     object(argument) &&
     hasProperty(argument, 'form', form) &&
     (
+      keyCount(argument) === 1 ||
       (
-        hasProperty(argument, 'heading', term) &&
-        keyCount(argument) === 2
-      ) || keyCount(argument) === 1
+        keyCount(argument) === 2 &&
+        hasProperty(argument, 'heading', term)
+      )
     )
   );
 };
 
-var predicates = [blank, child, definition, reference, text, use];
+var content = exports.content = (function() {
+  var predicates = [blank, child, definition, reference, text, use];
 
-var content = exports.content = function(argument) {
-  return predicates.some(function(predicate) {
-    return predicate(argument);
-  });
-};
+  return function(argument) {
+    return predicates.some(function(predicate) {
+      return predicate(argument);
+    });
+  };
+})();
 
-form = exports.form = function(argument) {
-  return (
-    object(argument) &&
-    hasProperty(argument, 'content', function(elements) {
-      return (
-        array(elements) &&
-        elements.length > 0 &&
-        elements.every(content) &&
-        !contiguous(elements, string) &&
-        !leadingSpaceString(elements[0]) &&
-        !terminalSpaceString(elements[elements.length - 1])
-      );
-    }) && (
+form = exports.form = (function() {
+  var leadingSpaceString = function(argument) {
+    return (
+      string(argument) &&
+      argument[0] === ' '
+    );
+  };
+
+  var terminalSpaceString = function(argument) {
+    return (
+      string(argument) &&
+      argument[argument.length - 1] === ' '
+    );
+  };
+
+  return function(argument) {
+    return (
+      object(argument) &&
+      hasProperty(argument, 'content', function(elements) {
+        return (
+          array(elements) &&
+          elements.length > 0 &&
+          elements.every(content) &&
+          !contiguous(elements, string) &&
+          !leadingSpaceString(elements[0]) &&
+          !terminalSpaceString(elements[elements.length - 1])
+        );
+      }) &&
       (
-        argument.conspicuous === 'yes' &&
-        keyCount(argument) === 2
-      ) || keyCount(argument) === 1
-    )
-  );
-};
+        keyCount(argument) === 1 ||
+        (
+          keyCount(argument) === 2 &&
+          argument.conspicuous === 'yes'
+        )
+      )
+    );
+  };
+})();
 
 exports.version = '1.0.0';
