@@ -28,12 +28,12 @@
     "validation"
   ],
   "license": "Apache-2.0",
-  "main": "commonform-validate.js",
+  "main": "source/index",
   "repository": "commonform/commonform-validate",
   "scripts": {
     "check": "check-versions --check-module",
     "coverage": "istanbul cover _mocha && istanbul check-coverage coverage/coverage.json",
-    "lint": "jshint commonform-validate.js test && jscs commonform-validate.js test",
+    "lint": "jshint source test && jscs source test",
     "pre-commit": "npm run lint && npm run coverage",
     "test": "mocha",
     "travis-ci": "npm run pre-commit"
