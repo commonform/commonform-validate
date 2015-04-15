@@ -2,14 +2,8 @@
   "name": "commonform-validate",
   "description": "validate Common Form content objects",
   "version": "1.0.0",
-  "author": {
-    "name": "Kyle E. Mitchell",
-    "email": "kyle@kemitchell.com",
-    "url": "http://kemitchell.com/"
-  },
-  "bugs": {
-    "url": "https://github.com/commonform/commonform-validate/issues"
-  },
+  "author": "Kyle E. Mitchell <kyle@kemitchell.com> (http://kemitchell.com)",
+  "bugs": "https://github.com/commonform/commonform-validate/issues",
   "dependencies": {
     "contiguous": "^1.0.1",
     "is-array": "^1.0.1",
@@ -18,29 +12,28 @@
   },
   "devDependencies": {
     "chai": "^2.2.0",
-    "check-versions": "1.x",
+    "check-versions": "^1.0.0",
     "istanbul": "^0.3.13",
     "jscs": "^1.12.0",
     "jshint": "^2.6.3",
     "mocha": "^2.2.4"
   },
-  "homepage": "https://github.com/commonform/commonform-validate",
+  "homepage": "https://commonform.github.io",
   "keywords": [
     "contracts",
     "document assembly",
     "knowledge management",
-    "law"
+    "law",
+    "schema",
+    "validation"
   ],
   "license": "Apache-2.0",
-  "main": "source/index",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/commonform/commonform-validate.git"
-  },
+  "main": "commonform-validate.js",
+  "repository": "commonform/commonform-validate",
   "scripts": {
     "check": "check-versions --check-module",
-    "coverage": "istanbul cover _mocha -- && istanbul check-coverage coverage/coverage.json",
-    "lint": "jshint source test && jscs source test",
+    "coverage": "istanbul cover _mocha && istanbul check-coverage coverage/coverage.json",
+    "lint": "jshint commonform-validate.js test && jscs commonform-validate.js test",
     "pre-commit": "npm run lint && npm run coverage",
     "test": "mocha",
     "travis-ci": "npm run pre-commit"

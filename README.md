@@ -1,4 +1,4 @@
 commonform-validate
 ===================
 
-Validate Common Form data structures.
+Validate Common Form content objects.
