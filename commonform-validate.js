@@ -117,4 +117,4 @@ form = exports.form = (function() {
   };
 })();
 
-exports.version = '1.0.0';
+exports.version = '0.4.0';

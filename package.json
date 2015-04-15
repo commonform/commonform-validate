@@ -1,7 +1,7 @@
 {
   "name": "commonform-validate",
   "description": "validate Common Form content objects",
-  "version": "1.0.0",
+  "version": "0.4.0",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (http://kemitchell.com)",
   "bugs": "https://github.com/commonform/commonform-validate/issues",
   "dependencies": {
