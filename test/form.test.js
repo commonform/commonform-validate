@@ -1,4 +1,4 @@
-/* jshint node: true, mocha: true */
+/* jshint mocha: true */
 var expect = require('chai').expect;
 var validate = require('..');
 
