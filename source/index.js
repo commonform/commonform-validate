@@ -116,5 +116,3 @@ form = exports.form = (function() {
     );
   };
 })();
-
-exports.version = '0.4.0';

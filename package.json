@@ -12,7 +12,6 @@
   },
   "devDependencies": {
     "chai": "^2.2.0",
-    "check-versions": "^1.0.0",
     "istanbul": "^0.3.13",
     "jscs": "^1.12.0",
     "jshint": "^2.6.3",
@@ -34,10 +33,9 @@
   },
   "repository": "commonform/commonform-validate",
   "scripts": {
-    "check": "check-versions --check-module",
     "coverage": "istanbul check-coverage --config .dotfiles/istanbul.yml coverage/coverage.json",
     "lint": "jshint --config .dotfiles/jshint.json source test && jscs --config .dotfiles/jscs.json source test",
-    "precommit": "npm run check && npm run lint && npm run coverage",
+    "precommit": "npm run lint && npm run coverage",
     "precoverage": "istanbul cover --config .dotfiles/istanbul.yml -- _mocha --opts .dotfiles/mocha.opts",
     "test": "mocha --opts .dotfiles/mocha.opts"
   }
