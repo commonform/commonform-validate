@@ -2,11 +2,8 @@
 .editorconfig
 .gitattributes
 .gitignore
-.istanbul.yml
 .jscsrc
 .jshintrc
 .npmignore
 .travis.yml
-CONTRIBUTING.md
-coverage/
 test/

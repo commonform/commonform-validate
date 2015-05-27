@@ -1,15 +1,16 @@
-/* jshint mocha: true */
-var expect = require('chai').expect;
-var validation = require('..');
+var test = require('tape');
+var validate = require('..');
 
-describe('Definitions', function() {
-  it('contain a single property, "definition"', function() {
-    expect(validation.definition({definition: 'Cash'})).to.equal(true);
-  });
+test('Definitions', function(test) {
+  test.ok(
+    validate.definition({definition: 'A'}),
+    'definitions have "definition"');
 
-  it('cannot be functions', function() {
-    var f = function() {};
-    f.definition = 'Merger Consideration';
-    expect(validation.definition(f)).to.equal(false);
-  });
+  var f = function() {};
+  f.definition = 'A';
+  test.notOk(
+    validate.definition(f),
+    'definitions are plain objects');
+
+  test.end();
 });

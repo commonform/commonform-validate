@@ -1,9 +1,10 @@
-/* jshint mocha: true */
-var expect = require('chai').expect;
-var validation = require('..');
+var test = require('tape');
+var validate = require('..');
 
-describe('References', function() {
-  it('contain a single property, "reference"', function() {
-    expect(validation.reference({reference: 'Payment'})).to.equal(true);
-  });
+test('References', function(test) {
+  test.ok(
+    validate.reference({reference: 'A'}),
+    'references have "reference"');
+
+  test.end();
 });

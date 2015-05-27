@@ -11,11 +11,10 @@
     "is-string": "^1.0.4"
   },
   "devDependencies": {
-    "chai": "2.3.0",
-    "istanbul": "^0.3.13",
-    "jscs": "^1.12.0",
-    "jshint": "^2.6.3",
-    "mocha": "2.2.5"
+    "covert": "1.1.0",
+    "jscs": "1.13.1",
+    "jshint": "2.7.0",
+    "tape": "4.0.0"
   },
   "homepage": "https://commonform.github.io",
   "keywords": [
@@ -33,10 +32,9 @@
   },
   "repository": "commonform/commonform-validate",
   "scripts": {
-    "coverage": "istanbul check-coverage coverage/coverage.json",
+    "coverage": "covert test/*.test.js",
     "lint": "jshint source test && jscs source test",
     "precommit": "npm run lint && npm run coverage",
-    "precoverage": "istanbul cover -- _mocha",
-    "test": "mocha"
+    "test": "tape test/*.test.js"
   }
 }

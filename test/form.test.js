@@ -1,103 +1,73 @@
-/* jshint mocha: true */
-var expect = require('chai').expect;
+var test = require('tape');
 var validate = require('..');
 
-describe('Forms', function() {
-  it('must have .content', function() {
-    expect(validate.form({})).to.equal(false);
-  });
+test('Forms', function(test) {
+  test.ok(
+    !validate.form({}),
+    'forms have "content"');
 
-  it('may have .conspicuous', function() {
-    expect(
-      validate.form({
-        content: ['Test'],
-        conspicuous: 'yes'
-      })
-    ).to.equal(true);
-  });
+  test.ok(
+    validate.form({content: ['A'], conspicuous: 'yes'}),
+    'forms may have "conspicuous"');
 
-  it('cannot have other properties', function() {
-    expect(
-      validate.form({
-        content: ['Test'],
-        extra: false
-      })
-    ).to.equal(false);
-  });
+  test.ok(
+    !validate.form({content: ['A'], extra: false}),
+    'forms have no extra properties');
 
-  it('cannot be functions', function() {
-    var f = function() {};
-    f.content = ['Text'];
-    expect(validate.form(f)).to.equal(false);
-  });
+  var f = function() {};
+  f.content = ['A'];
+  test.ok(
+    !validate.form(f),
+    'forms are plain objects');
 
-  describe('.content', function() {
-    it('must be an array', function() {
-      expect(validate.form({content: 'Test'})).to.equal(false);
-    });
+  test.ok(
+    !validate.form({content: 'A'}),
+    'form "content" is an array');
 
-    it('cannot be empty', function() {
-      expect(validate.form({content: []})).to.equal(false);
-    });
+  test.ok(
+    !validate.form({content: []}),
+    'form "content" cannot be empty');
 
-    it('cannot contain contiguous strings', function() {
-      expect(validate.form({content: ['a', 'b']})).to.equal(false);
-    });
+  test.ok(
+    !validate.form({content: ['a', 'b']}),
+    'forms cannot contain contiguous strings');
 
-    it('cannot contain empty strings', function() {
-      expect(validate.form({content: ['']})).to.equal(false);
-    });
+  test.ok(
+    !validate.form({content: ['']}),
+    'forms cannot contain empty strings');
 
-    it('cannot lead with a space', function() {
-      expect(validate.form({content: [' text']})).to.equal(false);
-    });
+  test.ok(
+    !validate.form({content: [' a']}),
+    'form content cannot start with space');
 
-    it('cannot end with a space', function() {
-      expect(validate.form({content: ['text ']})).to.equal(false);
-    });
-  });
+  test.ok(
+    !validate.form({content: ['a ']}),
+    'form content cannot end with space');
 
-  describe('.conspicuous', function() {
-    it('can be "yes"', function() {
-      expect(
-        validate.form({
-          content: ['A'],
-          conspicuous: 'yes'
-        })
-      ).to.equal(true);
-    });
+  test.ok(
+    validate.form({content: ['A'], conspicuous: 'yes'}),
+    'form "conspicuous" properties can be "yes"');
 
-    it('cannot be (boolean) true', function() {
-      expect(
-        validate.form({
-          content: ['B'],
-          conspicuous: true
-        })
-      ).to.equal(false);
-    });
+  test.ok(
+    !validate.form({content: ['B'], conspicuous: true}),
+    'form "conspicuous" properties cannot be (boolean) true');
 
-    it('cannot be null', function() {
-      expect(
-        validate.form({
-          content: ['Test'],
-          conspicuous: null
-        })
-      ).to.equal(false);
-    });
-  });
+  test.ok(
+    !validate.form({content: ['A'], conspicuous: null}),
+    'form "conspicuous" properties cannot be null');
 
-  it('include the real-world example', function() {
-    expect(
-      validate.form({
-        content: [
-          'Any dispute or controversy arising under or in connection ' +
-          'with this ', {use: 'Agreement'}, ' shall be settled ' +
-          'exclusively by arbitration in the ',
-          {blank: 'Arbitration Venue'}, ', in accordance with the ' +
-          'applicable rules of the American Arbitration Association ' +
-          'then in effect.'
-        ]
-      })
-    ).to.equal(true);
-  });
+  test.ok(
+    validate.form({
+      content: [
+        'Any dispute or controversy arising under or in connection ' +
+        'with this ', {use: 'Agreement'}, ' shall be settled ' +
+        'exclusively by arbitration in the ',
+        {blank: 'Arbitration Venue'}, ', in accordance with the ' +
+        'applicable rules of the American Arbitration Association ' +
+        'then in effect.'
+      ]
+    }),
+    'valid forms include the real-world example');
+
+  test.end();
 });

@@ -1,9 +1,10 @@
-/* jshint mocha: true */
-var expect = require('chai').expect;
-var validation = require('..');
+var test = require('tape');
+var validate = require('..');
 
-describe('Use', function() {
-  it('contain a single property, "use"', function() {
-    expect(validation.use({use: 'Consideration'})).to.equal(true);
-  });
+test('Uses', function(test) {
+  test.ok(
+    validate.use({use: 'A'}),
+    'uses have "use"');
+
+  test.end();
 });

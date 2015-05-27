@@ -1,9 +1,10 @@
-/* jshint mocha: true */
-var expect = require('chai').expect;
+var test = require('tape');
 var validate = require('..');
 
-describe('Blanks', function() {
-  it('include a single property, "blank"', function() {
-    expect(validate.blank({blank: 'Interest'})).to.equal(true);
-  });
+test('Blanks', function(test) {
+  test.ok(
+    validate.blank({blank: 'A'}),
+    'blanks have "blank"');
+
+  test.end();
 });

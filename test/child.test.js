@@ -1,32 +1,20 @@
-/* jshint mocha: true */
-var expect = require('chai').expect;
+var test = require('tape');
 var validate = require('..');
 
-var child = {
-  content: ['Child text']
-};
+test('Children', function(test) {
+  test.ok(
+    validate.child({heading: 'A', form: {content: ['B']}}),
+    'children have "heading" and "form"');
 
-describe('Children', function() {
-  it('can contain "heading" and "form" properties', function() {
-    expect(
-      validate.child({
-        heading: 'Indemnification',
-        form: child
-      })
-    ).to.equal(true);
-  });
+  test.ok(
+    validate.child({form: {content: ['A']}}),
+    'children can omit "heading"');
 
-  it('can omit "heading"', function() {
-    expect(
-      validate.child({form: child})
-    ).to.equal(true);
-  });
+  var f = function() {};
+  f.form = {content: ['A']};
+  test.notOk(
+    validate.child(f),
+    'children are plain objects');
 
-  it('cannot be functions', function() {
-    var f = function() {};
-    f.form = child;
-    expect(
-      validate.child(f)
-    ).to.equal(false);
-  });
+  test.end();
 });
