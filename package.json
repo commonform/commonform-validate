@@ -9,10 +9,10 @@
   },
   "bugs": "https://github.com/commonform/commonform-validate/issues",
   "dependencies": {
-    "contiguous": "^1.0.1",
-    "is-array": "^1.0.1",
-    "is-object": "^1.0.1",
-    "is-string": "^1.0.4"
+    "contiguous": "1.0.1",
+    "is-array": "1.0.1",
+    "is-object": "1.0.1",
+    "is-string": "1.0.4"
   },
   "devDependencies": {
     "covert": "1.1.0",
