@@ -2,7 +2,11 @@
   "name": "commonform-validate",
   "description": "validate Common Forms",
   "version": "0.4.0",
-  "author": "Kyle E. Mitchell <kyle@kemitchell.com> (http://kemitchell.com)",
+  "author": {
+    "name": "Kyle E. Mitchell",
+    "email": "kyle@kemitchell.com",
+    "url": "http://kemitchell.com"
+  },
   "bugs": "https://github.com/commonform/commonform-validate/issues",
   "dependencies": {
     "contiguous": "^1.0.1",
@@ -26,11 +30,14 @@
     "validation"
   ],
   "license": "Apache-2.0",
-  "main": "source/index",
+  "main": "source/index.js",
   "peerDependencies": {
     "commonform": "1.x"
   },
-  "repository": "commonform/commonform-validate",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commonform/commonform-validate.git"
+  },
   "scripts": {
     "coverage": "covert test/*.test.js",
     "lint": "jshint source test && jscs source test",
