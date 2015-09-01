@@ -7,6 +7,8 @@ var valid = require('commonform-validate')
 ## Simple Example
 
 ```javascript
+var assert = require('assert')
+
 assert(
   valid.form({
     content: [ 'A' ],
@@ -111,8 +113,6 @@ assert(
 ## Blanks
 
 ```javascript
-var assert = require('assert')
-
 assert(valid.blank({ blank: 'A' }))
 ```
 
