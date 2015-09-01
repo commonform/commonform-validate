@@ -28,9 +28,6 @@
     "validation"
   ],
   "license": "Apache-2.0",
-  "peerDependencies": {
-    "commonform": "1.x"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/commonform/commonform-validate.git"
