@@ -1,5 +1,2 @@
-*.tgz
-.gitignore
 .npmignore
 .travis.yml
-test/
