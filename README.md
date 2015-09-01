@@ -72,7 +72,7 @@ assert(!valid.form({ content: [ 'a ' ] }))
 
 Forms that must be typeset conspicuously have a `conspicuous` property:
 
-```javacript
+```javascript
 assert(
   valid.form({
     content: [ 'A' ],
