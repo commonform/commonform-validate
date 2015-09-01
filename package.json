@@ -28,7 +28,6 @@
     "validation"
   ],
   "license": "Apache-2.0",
-  "main": "source/index.js",
   "peerDependencies": {
     "commonform": "1.x"
   },
