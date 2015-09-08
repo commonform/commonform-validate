@@ -69,6 +69,27 @@ form = exports.form = (function() {
       string(argument) &&
       argument[argument.length - 1] === ' ' ) }
 
+  var looksLikeAChild = function(argument) {
+    return argument.hasOwnProperty('form') }
+
+  var spaceAbuttingChild = function(elements) {
+    var lastIndex = elements.length - 1
+    return elements.some(function(element, index, list) {
+      if (!string(element)) {
+        return false }
+      else {
+        if (index > 0) {
+          var elementBefore = list[index - 1]
+          var childBefore = looksLikeAChild(elementBefore)
+          if (childBefore && leadingSpaceString(element)) {
+            return true } }
+        if (index < lastIndex) {
+          var elementAfter = list[index + 1]
+          var childAfter = looksLikeAChild(elementAfter)
+          if (childAfter && terminalSpaceString(element)) {
+            return true } }
+        return false } }) }
+
   return function(argument) {
     return (
       object(argument) &&
@@ -78,6 +99,7 @@ form = exports.form = (function() {
           elements.length > 0 &&
           elements.every(content) &&
           !contiguous(elements, string) &&
+          !spaceAbuttingChild(elements) &&
           !leadingSpaceString(elements[0]) &&
           !terminalSpaceString(elements[elements.length - 1]) ) }) &&
       ( keyCount(argument) === 1 ||
