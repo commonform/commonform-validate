@@ -150,3 +150,19 @@ var f = function() {  }
 f.form = { content: [ 'A' ] }
 assert(!valid.child(f))
 ```
+
+Any text surrounding a child form can't run up to it with space:
+
+```javascript
+assert(
+  !valid.form(
+  { content: [
+      'this is a space -> ',
+      { form: { content: [ 'A' ] } } ] }))
+
+assert(
+  !valid.form(
+  { content: [
+      { form: { content: [ 'A' ] } },
+       ' <- that was a space' ] }))
+```
