@@ -104,7 +104,7 @@ assert(
       'Any dispute or controversy arising under or in connection ' +
       'with this ', { use: 'Agreement' }, ' shall be settled ' +
       'exclusively by arbitration in the ',
-      { blank: 'Arbitration Venue' }, ', in accordance with the ' +
+      { blank: '' }, ', in accordance with the ' +
       'applicable rules of the American Arbitration Association ' +
       'then in effect.' ] }),
   'valid forms include the real-world example')
@@ -113,7 +113,7 @@ assert(
 ## Blanks
 
 ```javascript
-assert(valid.blank({ blank: 'A' }))
+assert(valid.blank({ blank: '' }))
 ```
 
 ## Definitions

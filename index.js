@@ -36,10 +36,18 @@ var simpleObject = function(permittedKey) {
 
 exports.term = exports.heading = exports.value = term
 
-var blank = exports.blank = simpleObject('blank')
 var definition = exports.definition = simpleObject('definition')
 var reference = exports.reference = simpleObject('reference')
 var use = exports.use = simpleObject('use')
+
+function isEmptyString(argument) {
+  return ( argument === '' ) }
+
+var blank = exports.blank = function(argument) {
+  return (
+    object(argument) &&
+    keyCount(argument) === 1 &&
+    hasProperty(argument, 'blank', isEmptyString) ) }
 
 var form
 
