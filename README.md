@@ -48,6 +48,13 @@ assert(
   'forms cannot contain contiguous strings')
 ```
 
+Or contiguous blanks:
+
+```javascript
+assert(
+  !valid.form({ content: [ { blank: '' }, { blank: '' } ] }),
+  'forms cannot contain contiguous blanks')
+```
 Nor can they contain empty strings:
 
 ```javascript

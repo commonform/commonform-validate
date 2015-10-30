@@ -107,6 +107,7 @@ form = exports.form = (function() {
           elements.length > 0 &&
           elements.every(content) &&
           !contiguous(elements, string) &&
+          !contiguous(elements, blank) &&
           !spaceAbuttingChild(elements) &&
           !leadingSpaceString(elements[0]) &&
           !terminalSpaceString(elements[elements.length - 1]) ) }) &&
