@@ -2,12 +2,7 @@
   "name": "commonform-validate",
   "description": "validate Common Forms",
   "version": "0.6.0",
-  "author": {
-    "name": "Kyle E. Mitchell",
-    "email": "kyle@kemitchell.com",
-    "url": "http://kemitchell.com"
-  },
-  "bugs": "https://github.com/commonform/commonform-validate/issues",
+  "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com)",
   "dependencies": {
     "contiguous": "1.0.1",
     "is-array": "1.0.1",
@@ -28,10 +23,7 @@
     "validation"
   ],
   "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/commonform/commonform-validate.git"
-  },
+  "repository": "commonform/commonform-validate",
   "scripts": {
     "test": "defence README.md | replace-require-self | node"
   }
