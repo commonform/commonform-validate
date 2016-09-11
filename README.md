@@ -4,6 +4,33 @@ var valid = require('commonform-validate')
 
 # Forms
 
+Common Form represents legal forms, and pieces of legal forms, as
+objects following a very strict schema.  The package exports a function
+that, given an object, returns `true` or `false`, depending on whether
+the object follow the schema.  The schema embodies a number of rules,
+demonstrated in this read-me file, which is also the test suite for
+the package.
+
+The purpose of these rules is twofold:
+
+1.  Given a copy of a piece of legal language, perhaps in print or
+    another format, it should be clear how to encode that language
+    as a form.
+
+2.  There should be exactly one way to encode any given piece of
+    legal language as a valid form object.
+
+Neither of these goals is entirely achievable, but the rules make
+meaningful progress.  Together, they serve the overarching goal of
+forcing the encoding of exactly the same legal language in exactly the
+same data.  Other Common Form software [consistently serializes those
+objects][serialize] and [consistently hashes the serializations][hash].
+As a result, Common Form can use hashes to identify legal language.
+
+[serialize]: https://www.npmjs.com/package/commonform-serialize
+
+[hash]: https://www.npmjs.com/package/commonform-hash
+
 ## Simple Example
 
 ```javascript
