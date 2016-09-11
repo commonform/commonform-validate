@@ -80,7 +80,8 @@ Forms that must be typeset conspicuously have a `conspicuous` property:
 assert(
   valid.form({
     content: ['A'],
-    conspicuous: 'yes'}),
+    conspicuous: 'yes'
+  }),
   'form "conspicuous" properties can be "yes"'
 )
 ```
