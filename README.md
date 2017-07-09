@@ -1,21 +1,25 @@
 ```javascript
-var valid = require('commonform-validate')
+var validate = require('commonform-validate')
 ```
 
-# Forms
-
 Common Form represents legal forms, and pieces of legal forms, as
-objects following a very strict schema.  The package exports a function
-that, given an object, returns `true` or `false`, depending on whether
-the object follow the schema.  The schema embodies a number of rules,
-demonstrated in this read-me file, which is also the test suite for
-the package.
+objects following a single, strict schema.  This package exports a
+function, `validate.form(object)` that returns `true` if `object`
+follows that schema.
 
-The purpose of these rules is twofold:
+The schema embodies a number of rules, demonstrated by examples in
+this `README`.  The same examples serve as test suite for the package,
+using the `assert` module:
+
+```javascript
+var assert = require('assert')
+```
+
+The goals of the schema's rules are:
 
 1.  Given a copy of a piece of legal language, perhaps in print or
     another format, it should be clear how to encode that language
-    as a form.
+    as a valid form object.
 
 2.  There should be exactly one way to encode any given piece of
     legal language as a valid form object.
@@ -25,143 +29,381 @@ meaningful progress.  Together, they serve the overarching goal of
 forcing the encoding of exactly the same legal language in exactly the
 same data.  Other Common Form software [consistently serializes those
 objects][serialize] and [consistently hashes the serializations][hash].
-As a result, Common Form can use hashes to identify legal language.
+As a result, Common Form can use cryptographic hashes to identify
+legal language.
 
 [serialize]: https://www.npmjs.com/package/commonform-serialize
 
 [hash]: https://www.npmjs.com/package/commonform-hash
 
-## Simple Example
+For example:
 
-```javascript
-var assert = require('assert')
+> _Any dispute or controversy arising under this Agreement (a "Dispute") shall
+> be resolved exclusively by arbitration under Section 12 (Arbitration Rules)
+> in either: (i) New York City; or (ii) Chicago, Illinois._
 
-assert(valid.form({content: ['A'], conspicuous: 'yes'}))
-```
-
-## No Additional Properties
-
-```javascript
-assert(!valid.form({content: ['A'], extra: false}))
-```
-
-## Plain Objects
-
-```javascript
-var invalidForm = function () {}
-invalidForm.content = ['A']
-assert(!valid.form(invalidForm))
-```
-
-## Content
-
-```javascript
-assert(!valid.form({content: 'A'}))
-
-assert(!valid.form({content: []}))
-```
-
-Form content arrays cannot contain contiguous strings:
+Becomes:
 
 ```javascript
 assert(
-  !valid.form({content: ['a', 'b']}),
-  'forms cannot contain contiguous strings'
+  validate.form(
+    {
+      content: [
+        'Any dispute or controversy arising under this ',
+        {use: 'Agreement'},
+        ' (a ',
+        {definition: 'Dispute'},
+        ') shall be resolved exclusively by arbitration under ',
+        {reference: 'Arbitration Rules'},
+        ' in either:',
+        {
+          form: {
+            content: [
+              'New York City; or'
+            ]
+          }
+        },
+        {
+          form: {
+            content: [
+              'Chicago, Illinois.'
+            ]
+          }
+        }
+      ],
+      conspicuous: 'yes'
+    }
+  )
 )
 ```
 
-Or contiguous blanks:
+# Content
+
+The most important property of a form object is `content`, whose value
+must be an array.  The array holds the content of the form object as
+its elements.
+
+The `content` array cannot be empty.  It must contain at least one valid
+element:
 
 ```javascript
 assert(
-  !valid.form({content: [{blank: ''}, {blank: ''}]}),
-  'forms cannot contain contiguous blanks'
+  !validate.form({
+    content: []
+  })
 )
 ```
-Nor can they contain empty strings:
+
+## Strings
+
+Most text content is represented by strings:
 
 ```javascript
 assert(
-  !valid.form({content: ['']}),
-  'forms cannot contain empty strings'
+  validate.form(
+    {
+      content: [
+        'New York City'
+      ]
+    }
+  )
 )
 ```
 
-If the first element of `content` is a string, it can't start with space:
+Even if a form contains just a single string, `content` must be
+an array:
 
 ```javascript
-assert(!valid.form({content: [' a']}))
+assert(
+  !validate.form(
+    {
+      content: 'New York City'
+    }
+  )
+)
+```
+
+Strings in `content` may use only these specific characters:
+
+- digits `0` through `9`
+- letters `A` `Z` and `a` through `z`
+- (space)
+- punctuation marks `!` `"` `'` `(` `)` `,` (comma) `.` (period) `&` `/` `:` `;` `?` `[` `\` `]` ` (backtick)
+- math symbols `*` `+` `<` `=` `>` `-` `%`
+- other symbols `@` `_` (underscore) `$` `^` `{` `|` `}` `~` `#`
+
+This list notably _excludes_:
+
+- typographers' quotation marks, like `“` and `’`
+- long dashes, like `–` (en-dash) and `—` (em-dash)
+- `§`, `¶`
+
+Other Common Form software, like
+[commonform.org](https://commonform.org), tries its best to display
+quotation marks—valid data—as curly quotes—not allow as data,
+but much nicer to read—and so on.  In the underlying data, however,
+allowing both `"` (straight double quote) and `“` (left double quote)
+with `”` (right double quote), would make it easy to concoct two
+valid form objects with the same content:
+
+```javascript
+assert(
+  validate.form(
+    {
+      content: [
+        'The product comes "as is".'
+      ]
+    }
+  )
+)
+
+assert(
+  !validate.form(
+    {
+      content: [
+        'The product comes “as is”.'
+      ]
+    }
+  )
+)
+```
+
+Strings cannot appear next to one another in `content` arrays:
+
+```javascript
+assert(
+  !validate.form(
+    {
+      content: [
+        'The parties will litigate ',
+        'in San Francisco.'
+      ]
+    }
+  )
+)
+```
+
+Use one string instead:
+
+```javascript
+assert(
+  validate.form(
+    {
+      content: [
+        'The parties will litigate in San Francisco.'
+      ]
+    }
+  )
+)
+```
+
+If the first element of `content` is a string, that string cannot
+start with a space:
+
+```javascript
+assert(
+  !validate.form(
+    {
+      content: [
+        ' The parties will litigate in San Francisco.'
+      ]
+    }
+  )
+)
 ```
 
 Nor can a final string element end with space:
 
 ```javascript
-assert(!valid.form({content: ['a ']}))
-```
-
-## Conspicuous
-
-Forms that must be typeset conspicuously have a `conspicuous` property:
-
-```javascript
 assert(
-  valid.form({
-    content: ['A'],
-    conspicuous: 'yes'
-  }),
-  'form "conspicuous" properties can be "yes"'
+  !validate.form(
+    {
+      content: [
+        'The parties will litigate in San Francisco. '
+      ]
+    }
+  )
 )
 ```
-That property must have the string value `"yes"`. No other falsey values allowed:
 
-```javascript
-assert(!valid.form({content: ['B'], conspicuous: true}))
+## Definitions
 
-assert(!valid.form({content: ['A'], conspicuous: null}))
-```
-
-# Form Content Objects
-
-Form content arrays can contain a variety of objects:
+Definitions mark words and phrases that will be used with specific
+meaning elsewhere:
 
 ```javascript
 assert(
-  valid.form({
-    content: [
-      'Any dispute or controversy arising under or in connection ' +
-      'with this ', {use: 'Agreement'}, ' shall be settled ' +
-      'exclusively by arbitration in the ',
-      {blank: ''}, ', in accordance with the ' +
-      'applicable rules of the American Arbitration Association ' +
-      'then in effect.'
-    ]
-  }),
-  'valid forms include the real-world example'
+  validate.definition(
+    {definition: 'Applicable Law'}
+  )
+)
+```
+
+For example:
+
+```javascript
+assert(
+  validate.form(
+    {
+      content: [
+        {definition: 'Securities Act'},
+        ' means the Securities Act of 1933.'
+      ]
+    }
+  )
+)
+```
+
+```javascript
+assert(
+  validate.form(
+    {
+      content: [
+        'The ',
+        {definition: 'Purchase Price'},
+        ' is $1.00.'
+      ]
+    }
+  )
+)
+```
+
+## Uses
+
+Uses mark terms defined elsewhere:
+
+```javascript
+assert(
+  validate.use(
+    {use: 'Subject Assets'}
+  )
+)
+```
+
+The string value in the use object should match the string value in
+a corresponding definition object exactly.
+
+For example:
+
+```javascript
+assert(
+  validate.form(
+    {
+      content: [
+        {use: 'Purchaser'},
+        ' will place the ',
+        {use: 'Subject Assets'},
+        ' in escrow.'
+      ]
+    }
+  )
 )
 ```
 
 ## Blanks
 
+Blanks represent empty spaces in a form to fill in later:
+
 ```javascript
-assert(valid.blank({blank: ''}))
+assert(
+  validate.blank(
+    {blank: ''}
+  )
+)
 ```
 
-## Definitions
+For example:
 
 ```javascript
-assert(valid.definition({definition: 'A'}))
+assert(
+  validate.form(
+    {
+      content: [
+        'The purchase price is ',
+        {blank: ''},
+        '.'
+      ]
+    }
+  )
+)
+```
+
+Blanks are vital for keeping confidential information, like
+the identities of parties to a specific contract, or details like
+purchase prices and descriptions of waived claims, out of form objects.
+Other software under the Common Form umbrella automates the process of
+filling in blanks with confidential details, which can and should be
+kept separate from data about the generic language of form contracts.
+
+The value of the `blank` property must be an empty string:
+
+```javascript
+assert(
+  !validate.blank(
+    {blank: '$10'}
+  )
+)
+```
+
+Blanks cannot appear next to one another in `content` arrays:
+
+```javascript
+assert(
+  !validate.form(
+    {
+      content: [
+        'The parties will litigate this contract only in ',
+        {blank: ''},
+        {blank: ''},
+        '.'
+      ]
+    }
+  )
+)
+```
+
+Use a single blank instead:
+
+```javascript
+assert(
+  validate.form(
+    {
+      content: [
+        'The parties will litigate this contract only in ',
+        {blank: ''},
+        '.'
+      ]
+    }
+  )
+)
 ```
 
 ## References
 
+References refer to other parts of a form by heading:
+
 ```javascript
-assert(valid.reference({reference: 'A'}))
+assert(
+  validate.reference(
+    {reference: 'Payment Terms'}
+  )
+)
 ```
 
-## Uses
+For example:
 
 ```javascript
-assert(valid.use({use: 'A'}))
+assert(
+  validate.form(
+    {
+      content: [
+        'The escrow will be managed pursuant to ',
+        {reference: 'Escrow Procedure'},
+        '.'
+      ]
+    }
+  )
+)
 ```
 
 ## Children
@@ -169,33 +411,223 @@ assert(valid.use({use: 'A'}))
 Children allow forms to contain other forms, with optional headings:
 
 ```javascript
-assert(valid.child({form: {content: ['A']}}))
+assert(
+  validate.child(
+    {
+      form: {
+        content: [
+          'Text in the child form.'
+        ]
+      }
+    }
+  )
+)
 
-assert(valid.child({heading: 'A', form: {content: ['B']}}))
-
-var invalidChild = function () {}
-invalidChild.form = {content: ['A']}
-assert(!valid.child(invalidChild))
+assert(
+  validate.child(
+    {
+      heading: 'Warranty Disclaimer',
+      form: {
+        content: [
+          'The software comes without warranty, express or implied.'
+        ],
+        conspicuous: 'yes'
+      }
+    }
+  )
+)
 ```
 
-Any text surrounding a child form can't run up to it with space:
+Child forms represent any structure where one reusable piece of language appears
+within another.  Sections within articles.  Subsections within sections.
+Itemized lists within sections:
+
+```javscript
+assert(
+  validate.form(
+    {
+      content: [
+        {use: 'Confidential Information'},
+        ' does not include:',
+        {
+          form: {
+            content: [
+              'public information'
+            ]
+          }
+        },
+        {
+          form: {
+            content: [
+              'information received from others'
+            ]
+          }
+        },
+        {
+          form: {
+            content: [
+              'independent developments'
+            ]
+          }
+        }
+      ]
+    }
+  )
+)
+```
+
+Strings surrounding a child element cannot run up to the child element
+with space:
 
 ```javascript
 assert(
-  !valid.form({
-    content: [
-      'this is a space -> ',
-      {form: {content: ['A']}}
-    ]
+  !validate.form(
+    {
+      content: [
+        'this is a space -> ',
+        {
+          form: {
+            content: ['child form text']
+          }
+        }
+      ]
+    }
+  )
+)
+
+assert(
+  !validate.form(
+    {
+      content: [
+        {
+          form: {
+            content: ['child form text']
+          }
+        },
+        ' <- that was a space'
+      ]
+    }
+  )
+)
+```
+
+# Conspicuous Provisions
+
+Forms that must be typeset conspicuously have a `conspicuous` property
+whose value is the string `'yes'`:
+
+```javascript
+assert(
+  validate.form(
+    {
+      content: [
+        'Damages will be limited to $10.'
+      ],
+      conspicuous: 'yes'
+    }
+  )
+)
+```
+No other values are allowed:
+
+```javascript
+assert(
+  !validate.form(
+    {
+      content: [
+        'Damages will be limited to $10.'
+      ],
+      conspicuous: true
+    }
+  )
+)
+
+assert(
+  !validate.form(
+    {
+      content: [
+        'Damages will be limited to $10.'
+      ],
+      conspicuous: null
+    }
+  )
+)
+```
+
+# No Additional Properties
+
+Apart from `content` and optionally `conspicuous`, form objects may
+not have any other properties.
+
+```javascript
+assert(
+  !validate.form(
+    {
+      content: [
+        'There are no third-party beneficiaries.'
+      ],
+      extra: false
+    }
+  )
+)
+```
+
+Nor may content elements:
+
+```javascript
+assert(
+  !validate.definition({
+    definition: 'Purchase Price',
+    other: 'property'
   })
 )
 
 assert(
-  !valid.form({
-    content: [
-      {form: {content: ['A']}},
-      ' <- that was a space'
-    ]
+  !validate.definition({
+    use: 'Purchase Price',
+    plural: false
   })
+)
+
+assert(
+  !validate.definition({
+    reference: 'Termination',
+    underline: 'dashed'
+  })
+)
+
+assert(
+  !validate.definition({
+    blank: '',
+    placeholder: 'three weeks'
+  })
+)
+```
+
+# Plain Objects
+
+In JavaScript, almost everything is an object.  Form and content
+objects must be constructed with `{}` literal syntax or `new Object()`.
+Not functions or other types with the right properties set.
+
+```javascript
+var invalidForm = function () {}
+invalidForm.content = [
+  'Example string content.'
+]
+assert(
+  !validate.form(invalidForm)
+)
+```
+
+```javascript
+var invalidChild = function () {}
+invalidChild.form = {
+  content: [
+    'Example string content.'
+  ]
+}
+assert(
+  !validate.child(invalidChild)
 )
 ```
