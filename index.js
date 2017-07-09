@@ -74,7 +74,8 @@ var blank = exports.blank = function (argument) {
   return (
     object(argument) &&
     keyCount(argument) === 1 &&
-    hasProperty(argument, 'blank', isEmptyString)
+    hasProperty(argument, 'blank', isEmptyString) &&
+    true
   )
 }
 
@@ -90,7 +91,8 @@ var child = exports.child = function (argument) {
         keyCount(argument) === 2 &&
         hasProperty(argument, 'heading', term)
       )
-    )
+    ) &&
+    true
   )
 }
 
@@ -169,7 +171,8 @@ form = exports.form = (function () {
           keyCount(argument) === 2 &&
           argument.conspicuous === 'yes'
         )
-      )
+      ) &&
+      true
     )
   }
 })()
