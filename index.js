@@ -105,9 +105,12 @@ var component = exports.component = function (argument) {
       hasProperty(argument, 'repository', function repository (value) {
         if (!string(value)) return false
         var split = value.split('.')
-        if (split.length !== 2) return false
-        if (!/^[a-z]+$/.test(split[0])) return false
-        if (tlds.indexOf(split[1]) === -1) return false
+        if (split.length <= 2) return false
+        var validNames = split.slice(0, -1).every(function (name) {
+          return /^[a-z]+$/.test(name)
+        })
+        if (!validNames) return false
+        if (tlds.indexOf(split[split.length - 1]) === -1) return false
         return true
       }) &&
       hasProperty(argument, 'publisher', function (value) {

@@ -520,7 +520,7 @@ assert(
   validate.component(
     {
       heading: 'Warranty Disclaimer',
-      repository: 'commonform.org',
+      repository: 'api.commonform.org',
       publisher: 'kemitchell',
       project: 'orthodox-software-copyright-license',
       edition: '1e',
@@ -545,7 +545,7 @@ form will [upgrade] automatically to later published editions.
 assert(
   validate.component(
     {
-      repository: 'commonform.org',
+      repository: 'api.commonform.org',
       publisher: 'kemitchell',
       project: 'orthodox-software-copyright-license',
       edition: '1e',
@@ -569,7 +569,7 @@ assert(
       content: [
         'this is a space -> ',
         {
-          repository: 'commonform.org',
+          repository: 'api.commonform.org',
           publisher: 'kemitchell',
           project: 'orthodox-software-copyright-license',
           edition: '1e',
@@ -589,7 +589,7 @@ assert(
     {
       content: [
         {
-          repository: 'commonform.org',
+          repository: 'api.commonform.org',
           publisher: 'kemitchell',
           project: 'orthodox-software-copyright-license',
           edition: '1e',
