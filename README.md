@@ -533,7 +533,15 @@ assert(
     }
   )
 )
+```
 
+The `exact` flag indicates that the form incorporates only
+the indicated edition of the component.  Without `exact`, the
+form will [upgrade] automatically to later published editions.
+
+[upgrade]: https://www.npmjs.com/package/reviewers-edition-upgrade
+
+```javascript
 assert(
   validate.component(
     {
