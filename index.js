@@ -17,6 +17,8 @@ var array = require('is-array')
 var contiguous = require('contiguous')
 var object = require('is-object')
 var string = require('is-string')
+var tlds = require('tlds')
+var revedParse = require('reviewers-edition-parse')
 
 var keyCount = function (argument) {
   return Object.keys(argument).length
@@ -96,8 +98,57 @@ var child = exports.child = function (argument) {
   )
 }
 
+var component = exports.component = function (argument) {
+  return (
+    object(argument) &&
+    (
+      hasProperty(argument, 'repository', function repository (value) {
+        if (!string(value)) return false
+        var split = value.split('.')
+        if (split.length !== 2) return false
+        if (!/^[a-z]+$/.test(split[0])) return false
+        if (tlds.indexOf(split[1]) === -1) return false
+        return true
+      }) &&
+      hasProperty(argument, 'publisher', function (value) {
+        return string(value) && /^[a-z]{2,24}$/.test(value)
+      }) &&
+      hasProperty(argument, 'project', function (value) {
+        return string(value) && /^[a-z0-9-]+$/.test(value)
+      }) &&
+      hasProperty(argument, 'edition', function (value) {
+        return revedParse(value) !== false
+      }) &&
+      hasProperty(argument, 'substitutions', function (value) {
+        return (
+          object(value) &&
+          Object.keys(value).every(function (key) {
+            return term(key) && term(value[key])
+          })
+        )
+      })
+    ) &&
+    (
+      keyCount(argument) === 5 ||
+      (
+        keyCount(argument) === 6 &&
+        (
+          argument.exact === 'yes' ||
+          hasProperty(argument, 'heading', term)
+        )
+      ) ||
+      (
+        keyCount(argument) === 7 &&
+        argument.exact === 'yes' &&
+        hasProperty(argument, 'heading', term)
+      )
+    ) &&
+    true
+  )
+}
+
 var content = exports.content = (function () {
-  var predicates = [blank, child, definition, reference, text, use]
+  var predicates = [blank, child, component, definition, reference, text, use]
 
   return function (argument) {
     return predicates.some(function (predicate) {
@@ -122,7 +173,10 @@ form = exports.form = (function () {
   }
 
   var looksLikeAChild = function (argument) {
-    return argument.hasOwnProperty('form')
+    return (
+      argument.hasOwnProperty('form') ||
+      argument.hasOwnProperty('repository')
+    )
   }
 
   var spaceAbuttingChild = function (elements) {

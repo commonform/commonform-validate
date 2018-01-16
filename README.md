@@ -511,6 +511,93 @@ assert(
 )
 ```
 
+## Components
+
+Children can also be incorporated by reference:
+
+```javascript
+assert(
+  validate.component(
+    {
+      heading: 'Warranty Disclaimer',
+      repository: 'commonform.org',
+      publisher: 'kemitchell',
+      project: 'orthodox-software-copyright-license',
+      edition: '1e',
+      exact: 'yes',
+      substitutions: {
+        'Licensor': 'Vendor',
+        'Licensee': 'Customer',
+        'Program': 'Software'
+      }
+    }
+  )
+)
+
+assert(
+  validate.component(
+    {
+      repository: 'commonform.org',
+      publisher: 'kemitchell',
+      project: 'orthodox-software-copyright-license',
+      edition: '1e',
+      substitutions: {
+        'Licensor': 'Vendor',
+        'Licensee': 'Customer',
+        'Program': 'Software'
+      }
+    }
+  )
+)
+```
+
+Strings surrounding a component cannot run up to the component
+with space:
+
+```javascript
+assert(
+  !validate.form(
+    {
+      content: [
+        'this is a space -> ',
+        {
+          repository: 'commonform.org',
+          publisher: 'kemitchell',
+          project: 'orthodox-software-copyright-license',
+          edition: '1e',
+          substitutions: {
+            'Licensor': 'Vendor',
+            'Licensee': 'Customer',
+            'Program': 'Software'
+          }
+        }
+      ]
+    }
+  )
+)
+
+assert(
+  !validate.form(
+    {
+      content: [
+        {
+          repository: 'commonform.org',
+          publisher: 'kemitchell',
+          project: 'orthodox-software-copyright-license',
+          edition: '1e',
+          substitutions: {
+            'Licensor': 'Vendor',
+            'Licensee': 'Customer',
+            'Program': 'Software'
+          }
+        },
+        ' <- that was a space'
+      ]
+    }
+  )
+)
+```
+
 # Conspicuous Provisions
 
 Forms that must be typeset conspicuously have a `conspicuous` property
