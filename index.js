@@ -125,9 +125,9 @@ var component = exports.component = function (argument) {
       hasProperty(argument, 'substitutions', function (value) {
         return (
           object(value) &&
-          Object.keys(value).every(function (key) {
-            return term(key) && term(value[key])
-          })
+          hasProperty(value, 'terms', termMapping) &&
+          hasProperty(value, 'headings', termMapping) &&
+          keyCount(value) === 2
         )
       })
     ) &&
@@ -147,6 +147,15 @@ var component = exports.component = function (argument) {
       )
     ) &&
     true
+  )
+}
+
+function termMapping (argument) {
+  return (
+    object(argument) &&
+    Object.keys(argument).every(function (key) {
+      return term(key) && term(argument[key])
+    })
   )
 }
 

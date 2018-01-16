@@ -526,9 +526,14 @@ assert(
       edition: '1e',
       exact: 'yes',
       substitutions: {
-        'Licensor': 'Vendor',
-        'Licensee': 'Customer',
-        'Program': 'Software'
+        terms: {
+          'Licensor': 'Vendor',
+          'Licensee': 'Customer',
+          'Program': 'Software'
+        },
+        headings: {
+          'Express Warranties': 'Guarantees'
+        }
       }
     }
   )
@@ -550,9 +555,12 @@ assert(
       project: 'orthodox-software-copyright-license',
       edition: '1e',
       substitutions: {
-        'Licensor': 'Vendor',
-        'Licensee': 'Customer',
-        'Program': 'Software'
+        terms: {
+          'Licensor': 'Vendor',
+          'Licensee': 'Customer',
+          'Program': 'Software'
+        },
+        headings: {}
       }
     }
   )
@@ -574,9 +582,12 @@ assert(
           project: 'orthodox-software-copyright-license',
           edition: '1e',
           substitutions: {
-            'Licensor': 'Vendor',
-            'Licensee': 'Customer',
-            'Program': 'Software'
+            terms: {
+              'Licensor': 'Vendor',
+              'Licensee': 'Customer',
+              'Program': 'Software'
+            },
+            headings: {}
           }
         }
       ]
@@ -594,9 +605,12 @@ assert(
           project: 'orthodox-software-copyright-license',
           edition: '1e',
           substitutions: {
-            'Licensor': 'Vendor',
-            'Licensee': 'Customer',
-            'Program': 'Software'
+            terms: {
+              'Licensor': 'Vendor',
+              'Licensee': 'Customer',
+              'Program': 'Software'
+            },
+            headings: {}
           }
         },
         ' <- that was a space'
