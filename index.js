@@ -20,6 +20,12 @@ var string = require('is-string')
 var tlds = require('tlds')
 var revedParse = require('reviewers-edition-parse')
 
+var ALL_LOWER_ALPHA = /^[a-z]+$/
+
+var ASCII_TLDS = tlds.filter(function (tld) {
+  return ALL_LOWER_ALPHA.test(tld)
+})
+
 var keyCount = function (argument) {
   return Object.keys(argument).length
 }
@@ -107,10 +113,10 @@ var component = exports.component = function (argument) {
         var split = value.split('.')
         if (split.length <= 2) return false
         var validNames = split.slice(0, -1).every(function (name) {
-          return /^[a-z]+$/.test(name)
+          return ALL_LOWER_ALPHA.test(name)
         })
         if (!validNames) return false
-        if (tlds.indexOf(split[split.length - 1]) === -1) return false
+        if (ASCII_TLDS.indexOf(split[split.length - 1]) === -1) return false
         return true
       }) &&
       hasProperty(argument, 'publisher', function (value) {
