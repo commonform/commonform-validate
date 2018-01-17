@@ -142,13 +142,13 @@ var component = exports.component = function (argument) {
       (
         keyCount(argument) === 6 &&
         (
-          argument.exact === 'yes' ||
+          argument.upgrade === 'yes' ||
           hasProperty(argument, 'heading', term)
         )
       ) ||
       (
         keyCount(argument) === 7 &&
-        argument.exact === 'yes' &&
+        argument.upgrade === 'yes' &&
         hasProperty(argument, 'heading', term)
       )
     ) &&

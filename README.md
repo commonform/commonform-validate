@@ -524,7 +524,7 @@ assert(
       publisher: 'kemitchell',
       project: 'orthodox-software-copyright-license',
       edition: '1e',
-      exact: 'yes',
+      upgrade: 'yes',
       substitutions: {
         terms: {
           'Licensor': 'Vendor',
@@ -540,9 +540,9 @@ assert(
 )
 ```
 
-The `exact` flag indicates that the form incorporates only
-the indicated edition of the component.  Without `exact`, the
-form will [upgrade] automatically to later published editions.
+The `upgrade` flag indicates that the form should [upgrade]
+automatically to later published editions.  Without `upgrade`, the
+form will incorporate only the indicated edition.
 
 [upgrade]: https://www.npmjs.com/package/reviewers-edition-upgrade
 
