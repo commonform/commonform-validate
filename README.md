@@ -538,6 +538,34 @@ assert(
     }
   )
 )
+
+assert(
+  !validate.form(
+    {
+      content: [
+        {
+          heading: 'Warranty Disclaimer',
+          repository: 'api.commonform.org',
+          publisher: 'kemitchell',
+          project: 'orthodox-software-copyright-license',
+          edition: '1e',
+          upgrade: 'yes',
+          substitutions: {
+            terms: {
+              'Licensor': 'Vendor',
+              'Licensee': 'Customer',
+              'Program': 'Software'
+            },
+            headings: {
+              'Express Warranties': 'Guarantees'
+            }
+          }
+        }
+      ]
+    },
+    false // Do not allow components.
+  )
+)
 ```
 
 The `upgrade` flag indicates that the form should [upgrade]
@@ -591,7 +619,8 @@ assert(
           }
         }
       ]
-    }
+    },
+    true // Allow components.
   )
 )
 
@@ -615,7 +644,8 @@ assert(
         },
         ' <- that was a space'
       ]
-    }
+    },
+    true // Allow components.
   )
 )
 ```
