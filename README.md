@@ -562,8 +562,8 @@ assert(
           }
         }
       ]
-    },
-    false // Do not allow components.
+    }
+    // Do not allow components.
   )
 )
 ```
@@ -620,7 +620,7 @@ assert(
         }
       ]
     },
-    true // Allow components.
+    {allowComponents: true}
   )
 )
 
@@ -645,7 +645,7 @@ assert(
         ' <- that was a space'
       ]
     },
-    true // Allow components.
+    {allowComponents: true}
   )
 )
 ```

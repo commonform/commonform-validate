@@ -168,9 +168,9 @@ function termMapping (argument) {
 var content = exports.content = (function () {
   var predicates = [blank, child, definition, reference, text, use]
 
-  return function (argument, allowComponents) {
+  return function (argument, options) {
     return (
-      allowComponents
+      (options && options.allowComponents)
         ? predicates.concat(component)
         : predicates
     ).some(function (predicate) {
@@ -226,7 +226,7 @@ form = exports.form = (function () {
     })
   }
 
-  return function (argument, allowComponents) {
+  return function (argument, options) {
     return (
       object(argument) &&
       hasProperty(argument, 'content', function (elements) {
@@ -234,7 +234,7 @@ form = exports.form = (function () {
           array(elements) &&
           elements.length > 0 &&
           elements.every(function (element) {
-            return content(element, allowComponents)
+            return content(element, options)
           }) &&
           !contiguous(elements, string) &&
           !contiguous(elements, blank) &&
