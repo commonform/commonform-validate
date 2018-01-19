@@ -513,6 +513,8 @@ assert(
 
 ## Components
 
+The validation routine optionally permits components.
+
 Children can also be incorporated by reference:
 
 ```javascript
