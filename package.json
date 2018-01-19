@@ -14,7 +14,8 @@
   "devDependencies": {
     "defence-cli": "~1.0.1",
     "replace-require-self": "~1.0.0",
-    "standard": "^7.1.2"
+    "standard": "^7.1.2",
+    "standard-markdown": "^4.0.2"
   },
   "files": [
     "LICENSE",
@@ -33,7 +34,7 @@
   "license": "Apache-2.0",
   "repository": "commonform/commonform-validate",
   "scripts": {
-    "lint": "standard",
+    "lint": "standard && standard-markdown",
     "test": "defence README.md | replace-require-self | node"
   }
 }
