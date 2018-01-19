@@ -1,7 +1,3 @@
-```javascript
-var validate = require('commonform-validate')
-```
-
 Common Form represents legal forms, and pieces of legal forms, as
 objects following a single, strict schema.  This package exports a
 function, `validate.form(object)` that returns `true` if `object`
@@ -45,6 +41,8 @@ For example:
 Becomes:
 
 ```javascript
+var validate = require('commonform-validate')
+
 assert(
   validate.form(
     {
