@@ -566,6 +566,41 @@ assert(
     // Do not allow components.
   )
 )
+
+assert(
+  validate.form(
+    {
+      content: [
+        {
+          heading: 'Here Come Components!',
+          form: {
+            content: [
+              {
+                heading: 'Warranty Disclaimer',
+                repository: 'api.commonform.org',
+                publisher: 'kemitchell',
+                project: 'orthodox-software-copyright-license',
+                edition: '1e',
+                upgrade: 'yes',
+                substitutions: {
+                  terms: {
+                    'Licensor': 'Vendor',
+                    'Licensee': 'Customer',
+                    'Program': 'Software'
+                  },
+                  headings: {
+                    'Express Warranties': 'Guarantees'
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {allowComponents: true}
+  )
+)
 ```
 
 The `upgrade` flag indicates that the form should [upgrade]

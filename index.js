@@ -89,10 +89,12 @@ var blank = exports.blank = function (argument) {
 
 var form
 
-var child = exports.child = function (argument) {
+var child = exports.child = function (argument, options) {
   return (
     object(argument) &&
-    hasProperty(argument, 'form', form) &&
+    hasProperty(argument, 'form', function (argument) {
+      return form(argument, options)
+    }) &&
     (
       keyCount(argument) === 1 ||
       (
@@ -165,19 +167,15 @@ function termMapping (argument) {
   )
 }
 
-var content = exports.content = (function () {
+var content = exports.content = function (argument, options) {
   var predicates = [blank, child, definition, reference, text, use]
-
-  return function (argument, options) {
-    return (
-      (options && options.allowComponents)
-        ? predicates.concat(component)
-        : predicates
-    ).some(function (predicate) {
-      return predicate(argument)
-    })
+  if (options && options.allowComponents) {
+    predicates.push(component)
   }
-})()
+  return predicates.some(function (predicate) {
+    return predicate(argument, options)
+  })
+}
 
 form = exports.form = (function () {
   var leadingSpaceString = function (argument) {
