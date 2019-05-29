@@ -1,6 +1,6 @@
 {
   "name": "commonform-validate",
-  "description": "validate Common Forms",
+  "description": "validate Objects against Common Form's core schema for legal language",
   "version": "1.0.1",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com)",
   "dependencies": {
