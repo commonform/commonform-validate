@@ -1,3 +1,7 @@
+# commonform-validate
+
+validate Objects against Common Form's core schema for legal language
+
 Common Form represents legal forms, and pieces of legal forms, as
 objects following a single, strict schema.  This package exports a
 function, `validate.form(object)` that returns `true` if `object`
