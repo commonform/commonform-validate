@@ -1,6 +1,6 @@
 # commonform-validate
 
-validate Objects against Common Form's core schema for legal language
+validate Objects against [Common Form](https://commonform.github.io)'s core schema for legal language
 
 Common Form represents legal forms, and pieces of legal forms, as
 objects following a single, strict schema.  This package exports a
