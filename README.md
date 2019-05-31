@@ -54,11 +54,11 @@ assert(
     {
       content: [
         'Any dispute or controversy arising under this ',
-        {use: 'Agreement'},
+        { use: 'Agreement' },
         ' (a ',
-        {definition: 'Dispute'},
+        { definition: 'Dispute' },
         ') shall be resolved exclusively by arbitration under ',
-        {reference: 'Arbitration Rules'},
+        { reference: 'Arbitration Rules' },
         ' in either:',
         {
           form: {
@@ -238,7 +238,7 @@ meaning elsewhere:
 ```javascript
 assert(
   validate.definition(
-    {definition: 'Applicable Law'}
+    { definition: 'Applicable Law' }
   )
 )
 ```
@@ -250,7 +250,7 @@ assert(
   validate.form(
     {
       content: [
-        {definition: 'Securities Act'},
+        { definition: 'Securities Act' },
         ' means the Securities Act of 1933.'
       ]
     }
@@ -264,7 +264,7 @@ assert(
     {
       content: [
         'The ',
-        {definition: 'Purchase Price'},
+        { definition: 'Purchase Price' },
         ' is $1.00.'
       ]
     }
@@ -279,7 +279,7 @@ Uses mark terms defined elsewhere:
 ```javascript
 assert(
   validate.use(
-    {use: 'Subject Assets'}
+    { use: 'Subject Assets' }
   )
 )
 ```
@@ -294,9 +294,9 @@ assert(
   validate.form(
     {
       content: [
-        {use: 'Purchaser'},
+        { use: 'Purchaser' },
         ' will place the ',
-        {use: 'Subject Assets'},
+        { use: 'Subject Assets' },
         ' in escrow.'
       ]
     }
@@ -311,7 +311,7 @@ Blanks represent empty spaces in a form to fill in later:
 ```javascript
 assert(
   validate.blank(
-    {blank: ''}
+    { blank: '' }
   )
 )
 ```
@@ -324,7 +324,7 @@ assert(
     {
       content: [
         'The purchase price is ',
-        {blank: ''},
+        { blank: '' },
         '.'
       ]
     }
@@ -344,7 +344,7 @@ The value of the `blank` property must be an empty string:
 ```javascript
 assert(
   !validate.blank(
-    {blank: '$10'}
+    { blank: '$10' }
   )
 )
 ```
@@ -357,8 +357,8 @@ assert(
     {
       content: [
         'The parties will litigate this contract only in ',
-        {blank: ''},
-        {blank: ''},
+        { blank: '' },
+        { blank: '' },
         '.'
       ]
     }
@@ -374,7 +374,7 @@ assert(
     {
       content: [
         'The parties will litigate this contract only in ',
-        {blank: ''},
+        { blank: '' },
         '.'
       ]
     }
@@ -389,7 +389,7 @@ References refer to other parts of a form by heading:
 ```javascript
 assert(
   validate.reference(
-    {reference: 'Payment Terms'}
+    { reference: 'Payment Terms' }
   )
 )
 ```
@@ -402,7 +402,7 @@ assert(
     {
       content: [
         'The escrow will be managed pursuant to ',
-        {reference: 'Escrow Procedure'},
+        { reference: 'Escrow Procedure' },
         '.'
       ]
     }
@@ -451,7 +451,7 @@ assert(
   validate.form(
     {
       content: [
-        {use: 'Confidential Information'},
+        { use: 'Confidential Information' },
         ' does not include:',
         {
           form: {
@@ -491,7 +491,7 @@ assert(
         'this is a space -> ',
         {
           form: {
-            content: ['child form text']
+            content: [ 'child form text' ]
           }
         }
       ]
@@ -505,7 +505,7 @@ assert(
       content: [
         {
           form: {
-            content: ['child form text']
+            content: [ 'child form text' ]
           }
         },
         ' <- that was a space'
@@ -604,7 +604,7 @@ assert(
         }
       ]
     },
-    {allowComponents: true}
+    { allowComponents: true }
   )
 )
 ```
@@ -661,7 +661,7 @@ assert(
         }
       ]
     },
-    {allowComponents: true}
+    { allowComponents: true }
   )
 )
 
@@ -686,7 +686,7 @@ assert(
         ' <- that was a space'
       ]
     },
-    {allowComponents: true}
+    { allowComponents: true }
   )
 )
 ```
