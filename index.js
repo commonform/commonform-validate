@@ -1,9 +1,10 @@
 var array = require('is-array')
 var contiguous = require('contiguous')
+var has = require('has')
 var object = require('is-object')
+var revedParse = require('reviewers-edition-parse')
 var string = require('is-string')
 var tlds = require('tlds')
-var revedParse = require('reviewers-edition-parse')
 
 var ALL_LOWER_ALPHA = /^[a-z]+$/
 
@@ -17,7 +18,7 @@ var keyCount = function (argument) {
 
 var hasProperty = function (argument, key, predicate) {
   return (
-    argument.hasOwnProperty(key) &&
+    has(argument, key) &&
     predicate(argument[key])
   )
 }
@@ -179,8 +180,8 @@ form = exports.form = (function () {
 
   var looksLikeAChild = function (argument) {
     return (
-      argument.hasOwnProperty('form') ||
-      argument.hasOwnProperty('repository')
+      has(argument, 'form') ||
+      has(argument, 'repository')
     )
   }
 
