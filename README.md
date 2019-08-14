@@ -491,7 +491,7 @@ assert(
         'this is a space -> ',
         {
           form: {
-            content: [ 'child form text' ]
+            content: ['child form text']
           }
         }
       ]
@@ -505,7 +505,7 @@ assert(
       content: [
         {
           form: {
-            content: [ 'child form text' ]
+            content: ['child form text']
           }
         },
         ' <- that was a space'
@@ -533,9 +533,9 @@ assert(
       upgrade: 'yes',
       substitutions: {
         terms: {
-          'Licensor': 'Vendor',
-          'Licensee': 'Customer',
-          'Program': 'Software'
+          Licensor: 'Vendor',
+          Licensee: 'Customer',
+          Program: 'Software'
         },
         headings: {
           'Express Warranties': 'Guarantees'
@@ -558,9 +558,9 @@ assert(
           upgrade: 'yes',
           substitutions: {
             terms: {
-              'Licensor': 'Vendor',
-              'Licensee': 'Customer',
-              'Program': 'Software'
+              Licensor: 'Vendor',
+              Licensee: 'Customer',
+              Program: 'Software'
             },
             headings: {
               'Express Warranties': 'Guarantees'
@@ -590,9 +590,9 @@ assert(
                 upgrade: 'yes',
                 substitutions: {
                   terms: {
-                    'Licensor': 'Vendor',
-                    'Licensee': 'Customer',
-                    'Program': 'Software'
+                    Licensor: 'Vendor',
+                    Licensee: 'Customer',
+                    Program: 'Software'
                   },
                   headings: {
                     'Express Warranties': 'Guarantees'
@@ -625,9 +625,9 @@ assert(
       edition: '1e',
       substitutions: {
         terms: {
-          'Licensor': 'Vendor',
-          'Licensee': 'Customer',
-          'Program': 'Software'
+          Licensor: 'Vendor',
+          Licensee: 'Customer',
+          Program: 'Software'
         },
         headings: {}
       }
@@ -652,9 +652,9 @@ assert(
           edition: '1e',
           substitutions: {
             terms: {
-              'Licensor': 'Vendor',
-              'Licensee': 'Customer',
-              'Program': 'Software'
+              Licensor: 'Vendor',
+              Licensee: 'Customer',
+              Program: 'Software'
             },
             headings: {}
           }
@@ -676,9 +676,9 @@ assert(
           edition: '1e',
           substitutions: {
             terms: {
-              'Licensor': 'Vendor',
-              'Licensee': 'Customer',
-              'Program': 'Software'
+              Licensor: 'Vendor',
+              Licensee: 'Customer',
+              Program: 'Software'
             },
             headings: {}
           }
