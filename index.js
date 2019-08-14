@@ -12,31 +12,29 @@ var ASCII_TLDS = tlds.filter(function (tld) {
   return ALL_LOWER_ALPHA.test(tld)
 })
 
-var keyCount = function (argument) {
+function keyCount (argument) {
   return Object.keys(argument).length
 }
 
-var hasProperty = function (argument, key, predicate) {
+function hasProperty (argument, key, predicate) {
   return (
     has(argument, key) &&
     predicate(argument[key])
   )
 }
 
-var text = (function () {
-  var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/
+var ASCII_PRINTABLE_RE = /^[\x20-\x7E]*$/
 
-  return function (argument) {
-    return (
-      string(argument) &&
-      argument.length > 0 &&
-      argument.indexOf('  ') < 0 &&
-      ASCII_PRINTABLE_RE.test(argument)
-    )
-  }
-})()
+function text (argument) {
+  return (
+    string(argument) &&
+    argument.length > 0 &&
+    argument.indexOf('  ') < 0 &&
+    ASCII_PRINTABLE_RE.test(argument)
+  )
+}
 
-var term = function (argument) {
+function term (argument) {
   return (
     text(argument) &&
     argument[0] !== ' ' &&
@@ -44,7 +42,7 @@ var term = function (argument) {
   )
 }
 
-var simpleObject = function (permittedKey) {
+function simpleObject (permittedKey) {
   return function (argument) {
     return (
       object(argument) &&
@@ -64,7 +62,9 @@ function isEmptyString (argument) {
   return argument === ''
 }
 
-var blank = exports.blank = function (argument) {
+exports.blank = blank
+
+function blank (argument) {
   return (
     object(argument) &&
     keyCount(argument) === 1 &&
@@ -73,9 +73,9 @@ var blank = exports.blank = function (argument) {
   )
 }
 
-var form
+exports.child = child
 
-var child = exports.child = function (argument, options) {
+function child (argument, options) {
   return (
     object(argument) &&
     hasProperty(argument, 'form', function (argument) {
@@ -92,7 +92,9 @@ var child = exports.child = function (argument, options) {
   )
 }
 
-var component = exports.component = function (argument) {
+exports.component = component
+
+function component (argument) {
   return (
     object(argument) &&
     (
@@ -153,7 +155,9 @@ function termMapping (argument) {
   )
 }
 
-var content = exports.content = function (argument, options) {
+exports.content = content
+
+function content (argument, options) {
   var predicates = [blank, child, definition, reference, text, use]
   if (options && options.allowComponents) {
     predicates.push(component)
@@ -163,78 +167,78 @@ var content = exports.content = function (argument, options) {
   })
 }
 
-form = exports.form = (function () {
-  var leadingSpaceString = function (argument) {
-    return (
-      string(argument) &&
-      argument[0] === ' '
-    )
-  }
+exports.form = form
 
-  var terminalSpaceString = function (argument) {
-    return (
-      string(argument) &&
-      argument[argument.length - 1] === ' '
-    )
-  }
-
-  var looksLikeAChild = function (argument) {
-    return (
-      has(argument, 'form') ||
-      has(argument, 'repository')
-    )
-  }
-
-  var spaceAbuttingChild = function (elements) {
-    var lastIndex = elements.length - 1
-    return elements.some(function (element, index, list) {
-      if (!string(element)) {
-        return false
-      } else {
-        if (index > 0) {
-          var elementBefore = list[index - 1]
-          var childBefore = looksLikeAChild(elementBefore)
-          if (childBefore && leadingSpaceString(element)) {
-            return true
-          }
-        }
-        if (index < lastIndex) {
-          var elementAfter = list[index + 1]
-          var childAfter = looksLikeAChild(elementAfter)
-          if (childAfter && terminalSpaceString(element)) {
-            return true
-          }
-        }
-        return false
-      }
-    })
-  }
-
-  return function (argument, options) {
-    return (
-      object(argument) &&
-      hasProperty(argument, 'content', function (elements) {
-        return (
-          array(elements) &&
-          elements.length > 0 &&
-          elements.every(function (element) {
-            return content(element, options)
-          }) &&
-          !contiguous(elements, string) &&
-          !contiguous(elements, blank) &&
-          !spaceAbuttingChild(elements) &&
-          !leadingSpaceString(elements[0]) &&
-          !terminalSpaceString(elements[elements.length - 1])
-        )
-      }) &&
+function form (argument, options) {
+  return (
+    object(argument) &&
+    hasProperty(argument, 'content', function (elements) {
+      return (
+        array(elements) &&
+        elements.length > 0 &&
+        elements.every(function (element) {
+          return content(element, options)
+        }) &&
+        !contiguous(elements, string) &&
+        !contiguous(elements, blank) &&
+        !spaceAbuttingChild(elements) &&
+        !leadingSpaceString(elements[0]) &&
+        !terminalSpaceString(elements[elements.length - 1])
+      )
+    }) &&
+    (
+      keyCount(argument) === 1 ||
       (
-        keyCount(argument) === 1 ||
-        (
-          keyCount(argument) === 2 &&
-          argument.conspicuous === 'yes'
-        )
-      ) &&
-      true
-    )
-  }
-})()
+        keyCount(argument) === 2 &&
+        argument.conspicuous === 'yes'
+      )
+    ) &&
+    true
+  )
+}
+
+function leadingSpaceString (argument) {
+  return (
+    string(argument) &&
+    argument[0] === ' '
+  )
+}
+
+function terminalSpaceString (argument) {
+  return (
+    string(argument) &&
+    argument[argument.length - 1] === ' '
+  )
+}
+
+function looksLikeAChild (argument) {
+  return (
+    has(argument, 'form') ||
+    has(argument, 'repository')
+  )
+}
+
+function spaceAbuttingChild (elements) {
+  var lastIndex = elements.length - 1
+  return elements.some(function (element, index, list) {
+    if (!string(element)) {
+      return false
+    } else {
+      if (index > 0) {
+        var elementBefore = list[index - 1]
+        var childBefore = looksLikeAChild(elementBefore)
+        if (childBefore && leadingSpaceString(element)) {
+          return true
+        }
+      }
+      if (index < lastIndex) {
+        var elementAfter = list[index + 1]
+        var childAfter = looksLikeAChild(elementAfter)
+        if (childAfter && terminalSpaceString(element)) {
+          return true
+        }
+      }
+      return false
+    }
+  })
+}
