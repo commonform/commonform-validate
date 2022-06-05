@@ -522,116 +522,48 @@ The validation routine optionally permits components.
 Children can also be incorporated by reference:
 
 ```javascript
+var validComponent = {
+  repository: 'api.commonform.org',
+  publisher: 'kemitchell',
+  project: 'orthodox-software-copyright-license',
+  version: '1.0.0',
+  substitutions: {
+    terms: {
+      Licensor: 'Vendor',
+      Licensee: 'Customer',
+      Program: 'Software'
+    },
+    headings: {
+      'Express Warranties': 'Guarantees'
+    }
+  }
+}
+
+assert(validate.component(validComponent))
+
 assert(
   validate.component(
-    {
-      heading: 'Warranty Disclaimer',
-      repository: 'api.commonform.org',
-      publisher: 'kemitchell',
-      project: 'orthodox-software-copyright-license',
-      version: '1.0.0',
-      upgrade: 'yes',
-      substitutions: {
-        terms: {
-          Licensor: 'Vendor',
-          Licensee: 'Customer',
-          Program: 'Software'
-        },
-        headings: {
-          'Express Warranties': 'Guarantees'
-        }
-      }
-    }
+    Object.assign({}, validComponent, { heading: 'Copyright License' })
   )
 )
 
 assert(
-  !validate.form(
-    {
-      content: [
-        {
-          heading: 'Warranty Disclaimer',
-          repository: 'api.commonform.org',
-          publisher: 'kemitchell',
-          project: 'orthodox-software-copyright-license',
-          version: '1.0.0',
-          upgrade: 'yes',
-          substitutions: {
-            terms: {
-              Licensor: 'Vendor',
-              Licensee: 'Customer',
-              Program: 'Software'
-            },
-            headings: {
-              'Express Warranties': 'Guarantees'
-            }
-          }
-        }
-      ]
-    }
-    // Do not allow components.
+  !validate.component(
+    Object.assign({}, validComponent, { extra: 'property' })
   )
 )
 
 assert(
   validate.form(
-    {
-      content: [
-        {
-          heading: 'Here Come Components!',
-          form: {
-            content: [
-              {
-                heading: 'Warranty Disclaimer',
-                repository: 'api.commonform.org',
-                publisher: 'kemitchell',
-                project: 'orthodox-software-copyright-license',
-                version: '1.0.0',
-                upgrade: 'yes',
-                substitutions: {
-                  terms: {
-                    Licensor: 'Vendor',
-                    Licensee: 'Customer',
-                    Program: 'Software'
-                  },
-                  headings: {
-                    'Express Warranties': 'Guarantees'
-                  }
-                }
-              }
-            ]
-          }
-        }
-      ]
-    },
+    { content: [validComponent] },
     { allowComponents: true }
   )
 )
-```
 
-The `upgrade` flag indicates that the form should [upgrade]
-automatically to later published editions.  Without `upgrade`, the
-form will incorporate only the indicated edition.
-
-[upgrade]: https://www.npmjs.com/package/reviewers-edition-upgrade
-
-```javascript
 assert(
-  validate.component(
-    {
-      repository: 'api.commonform.org',
-      publisher: 'kemitchell',
-      project: 'orthodox-software-copyright-license',
-      edition: '1e',
-      substitutions: {
-        terms: {
-          Licensor: 'Vendor',
-          Licensee: 'Customer',
-          Program: 'Software'
-        },
-        headings: {}
-      }
-    }
+  !validate.form(
+    { content: [validComponent] },
+    // Do not allow components.
   )
 )
 ```
@@ -645,20 +577,7 @@ assert(
     {
       content: [
         'this is a space -> ',
-        {
-          repository: 'api.commonform.org',
-          publisher: 'kemitchell',
-          project: 'orthodox-software-copyright-license',
-          version: '1.0.0',
-          substitutions: {
-            terms: {
-              Licensor: 'Vendor',
-              Licensee: 'Customer',
-              Program: 'Software'
-            },
-            headings: {}
-          }
-        }
+        validComponent
       ]
     },
     { allowComponents: true }
@@ -669,20 +588,7 @@ assert(
   !validate.form(
     {
       content: [
-        {
-          repository: 'api.commonform.org',
-          publisher: 'kemitchell',
-          project: 'orthodox-software-copyright-license',
-          version: '1.0.0',
-          substitutions: {
-            terms: {
-              Licensor: 'Vendor',
-              Licensee: 'Customer',
-              Program: 'Software'
-            },
-            headings: {}
-          }
-        },
+        validComponent,
         ' <- that was a space'
       ]
     },

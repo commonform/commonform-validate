@@ -131,14 +131,6 @@ function component (argument) {
       keyCount(argument) === 5 ||
       (
         keyCount(argument) === 6 &&
-        (
-          argument.upgrade === 'yes' ||
-          hasProperty(argument, 'heading', term)
-        )
-      ) ||
-      (
-        keyCount(argument) === 7 &&
-        argument.upgrade === 'yes' &&
         hasProperty(argument, 'heading', term)
       )
     ) &&
