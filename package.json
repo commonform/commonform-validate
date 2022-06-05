@@ -7,7 +7,7 @@
     "contiguous": "^1.0.2",
     "has": "^1.0.3",
     "is-array": "1.0.1",
-    "is-object": "1.0.1",
+    "is-object": "^1.0.2",
     "is-string": "1.0.4",
     "legal-versioning-regexp": "^1.0.0"
   },
