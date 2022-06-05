@@ -8,9 +8,7 @@
     "has": "^1.0.3",
     "is-array": "1.0.1",
     "is-object": "1.0.1",
-    "is-string": "1.0.4",
-    "reviewers-edition-parse": "^2.0.6",
-    "tlds": "^1.199.0"
+    "is-string": "1.0.4"
   },
   "devDependencies": {
     "defence-cli": "^3.0.1",
@@ -33,7 +31,7 @@
     "schema",
     "validation"
   ],
-  "license": "BlueOak-1.0.0",
+  "license": "(MIT AND BlueOak-1.0.0)",
   "repository": "commonform/commonform-validate",
   "scripts": {
     "lint": "standard && standard-markdown",

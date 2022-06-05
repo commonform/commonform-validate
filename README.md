@@ -515,32 +515,18 @@ assert(
 )
 ```
 
-## Components
+## Snippets
 
-The validation routine optionally permits components.
+The validation routine optionally permits snippets.
 
 Children can also be incorporated by reference:
 
 ```javascript
 assert(
-  validate.component(
+  validate.snippet(
     {
       heading: 'Warranty Disclaimer',
-      repository: 'api.commonform.org',
-      publisher: 'kemitchell',
-      project: 'orthodox-software-copyright-license',
-      edition: '1e',
-      upgrade: 'yes',
-      substitutions: {
-        terms: {
-          Licensor: 'Vendor',
-          Licensee: 'Customer',
-          Program: 'Software'
-        },
-        headings: {
-          'Express Warranties': 'Guarantees'
-        }
-      }
+      snippet: 'https://example.com/warranty-disclaimer'
     }
   )
 )
@@ -551,25 +537,11 @@ assert(
       content: [
         {
           heading: 'Warranty Disclaimer',
-          repository: 'api.commonform.org',
-          publisher: 'kemitchell',
-          project: 'orthodox-software-copyright-license',
-          edition: '1e',
-          upgrade: 'yes',
-          substitutions: {
-            terms: {
-              Licensor: 'Vendor',
-              Licensee: 'Customer',
-              Program: 'Software'
-            },
-            headings: {
-              'Express Warranties': 'Guarantees'
-            }
-          }
+          snippet: 'https://example.com/warranty-disclaimer'
         }
       ]
     }
-    // Do not allow components.
+    // Do not allow snippets.
   )
 )
 
@@ -578,16 +550,12 @@ assert(
     {
       content: [
         {
-          heading: 'Here Come Components!',
+          heading: 'Here Come Snippets!',
           form: {
             content: [
               {
                 heading: 'Warranty Disclaimer',
-                repository: 'api.commonform.org',
-                publisher: 'kemitchell',
-                project: 'orthodox-software-copyright-license',
-                edition: '1e',
-                upgrade: 'yes',
+                snippet: 'https://example.com/software-dislaimer/1.0.0',
                 substitutions: {
                   terms: {
                     Licensor: 'Vendor',
@@ -604,39 +572,12 @@ assert(
         }
       ]
     },
-    { allowComponents: true }
+    { allowSnippets: true }
   )
 )
 ```
 
-The `upgrade` flag indicates that the form should [upgrade]
-automatically to later published editions.  Without `upgrade`, the
-form will incorporate only the indicated edition.
-
-[upgrade]: https://www.npmjs.com/package/reviewers-edition-upgrade
-
-```javascript
-assert(
-  validate.component(
-    {
-      repository: 'api.commonform.org',
-      publisher: 'kemitchell',
-      project: 'orthodox-software-copyright-license',
-      edition: '1e',
-      substitutions: {
-        terms: {
-          Licensor: 'Vendor',
-          Licensee: 'Customer',
-          Program: 'Software'
-        },
-        headings: {}
-      }
-    }
-  )
-)
-```
-
-Strings surrounding a component cannot run up to the component
+Strings surrounding a snippet cannot run up to the snippet
 with space:
 
 ```javascript
@@ -645,23 +586,10 @@ assert(
     {
       content: [
         'this is a space -> ',
-        {
-          repository: 'api.commonform.org',
-          publisher: 'kemitchell',
-          project: 'orthodox-software-copyright-license',
-          edition: '1e',
-          substitutions: {
-            terms: {
-              Licensor: 'Vendor',
-              Licensee: 'Customer',
-              Program: 'Software'
-            },
-            headings: {}
-          }
-        }
+        { snippet: 'https://example.com/snippet' }
       ]
     },
-    { allowComponents: true }
+    { allowSnippets: true }
   )
 )
 
@@ -669,24 +597,11 @@ assert(
   !validate.form(
     {
       content: [
-        {
-          repository: 'api.commonform.org',
-          publisher: 'kemitchell',
-          project: 'orthodox-software-copyright-license',
-          edition: '1e',
-          substitutions: {
-            terms: {
-              Licensor: 'Vendor',
-              Licensee: 'Customer',
-              Program: 'Software'
-            },
-            headings: {}
-          }
-        },
+        { snippet: 'https://example.com/snippet' },
         ' <- that was a space'
       ]
     },
-    { allowComponents: true }
+    { allowSnippets: true }
   )
 )
 ```
