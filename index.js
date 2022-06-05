@@ -3,14 +3,35 @@ var contiguous = require('contiguous')
 var has = require('has')
 var object = require('is-object')
 var string = require('is-string')
-var tlds = require('tlds')
 
 var VERSION_RE = new RegExp('^' + require('legal-versioning-regexp') + '$')
-var ALL_LOWER_ALPHA = /^[a-z]+$/
 
-var ASCII_TLDS = tlds.filter(function (tld) {
-  return ALL_LOWER_ALPHA.test(tld)
-})
+// The following regular expression was adapted from
+// https://gist.github.com/dperini/729294
+//
+// Copyright (c) 2010-2018 Diego Perini (http://www.iport.it)
+//
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+var HTTPS_URL_RE = /^(?:https):\/\/(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u{00a1}-\u{ffff}]+-)*[a-z0-9\u{00a1}-\u{ffff}]+)(?:\.(?:[a-z0-9\u{00a1}-\u{ffff}]+-)*[a-z0-9\u{00a1}-\u{ffff}]+)*(?:\.(?:[a-z\u{00a1}-\u{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/iu
 
 function keyCount (argument) {
   return Object.keys(argument).length
@@ -98,22 +119,8 @@ function component (argument) {
   return (
     object(argument) &&
     (
-      hasProperty(argument, 'repository', function repository (value) {
-        if (!string(value)) return false
-        var split = value.split('.')
-        if (split.length <= 2) return false
-        var validNames = split.slice(0, -1).every(function (name) {
-          return ALL_LOWER_ALPHA.test(name)
-        })
-        if (!validNames) return false
-        if (ASCII_TLDS.indexOf(split[split.length - 1]) === -1) return false
-        return true
-      }) &&
-      hasProperty(argument, 'publisher', function (value) {
-        return string(value) && /^[a-z]{2,24}$/.test(value)
-      }) &&
-      hasProperty(argument, 'project', function (value) {
-        return string(value) && /^[a-z0-9-]+$/.test(value)
+      hasProperty(argument, 'component', function (value) {
+        return HTTPS_URL_RE.test(value)
       }) &&
       hasProperty(argument, 'version', function (value) {
         return VERSION_RE.test(value)
@@ -128,9 +135,9 @@ function component (argument) {
       })
     ) &&
     (
-      keyCount(argument) === 5 ||
+      keyCount(argument) === 3 ||
       (
-        keyCount(argument) === 6 &&
+        keyCount(argument) === 4 &&
         hasProperty(argument, 'heading', term)
       )
     ) &&
@@ -206,7 +213,7 @@ function terminalSpaceString (argument) {
 function looksLikeAChild (argument) {
   return (
     has(argument, 'form') ||
-    has(argument, 'repository')
+    has(argument, 'component')
   )
 }
 

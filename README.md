@@ -523,9 +523,7 @@ Children can also be incorporated by reference:
 
 ```javascript
 var validComponent = {
-  repository: 'commonform.org',
-  publisher: 'kemitchell',
-  project: 'orthodox-software-copyright-license',
+  component: 'https://commonform.org/kemitchell/orthodox-software-copyright-license',
   version: '1.0.0',
   substitutions: {
     terms: {
@@ -562,7 +560,7 @@ assert(
 
 assert(
   !validate.form(
-    { content: [validComponent] },
+    { content: [validComponent] }
     // Do not allow components.
   )
 )
