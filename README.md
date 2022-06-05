@@ -529,7 +529,7 @@ assert(
       repository: 'api.commonform.org',
       publisher: 'kemitchell',
       project: 'orthodox-software-copyright-license',
-      edition: '1e',
+      version: '1.0.0',
       upgrade: 'yes',
       substitutions: {
         terms: {
@@ -554,7 +554,7 @@ assert(
           repository: 'api.commonform.org',
           publisher: 'kemitchell',
           project: 'orthodox-software-copyright-license',
-          edition: '1e',
+          version: '1.0.0',
           upgrade: 'yes',
           substitutions: {
             terms: {
@@ -586,7 +586,7 @@ assert(
                 repository: 'api.commonform.org',
                 publisher: 'kemitchell',
                 project: 'orthodox-software-copyright-license',
-                edition: '1e',
+                version: '1.0.0',
                 upgrade: 'yes',
                 substitutions: {
                   terms: {
@@ -649,7 +649,7 @@ assert(
           repository: 'api.commonform.org',
           publisher: 'kemitchell',
           project: 'orthodox-software-copyright-license',
-          edition: '1e',
+          version: '1.0.0',
           substitutions: {
             terms: {
               Licensor: 'Vendor',
@@ -673,7 +673,7 @@ assert(
           repository: 'api.commonform.org',
           publisher: 'kemitchell',
           project: 'orthodox-software-copyright-license',
-          edition: '1e',
+          version: '1.0.0',
           substitutions: {
             terms: {
               Licensor: 'Vendor',

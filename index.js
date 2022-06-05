@@ -2,10 +2,10 @@ var array = require('is-array')
 var contiguous = require('contiguous')
 var has = require('has')
 var object = require('is-object')
-var revedParse = require('reviewers-edition-parse')
 var string = require('is-string')
 var tlds = require('tlds')
 
+var VERSION_RE = new RegExp('^' + require('legal-versioning-regexp') + '$')
 var ALL_LOWER_ALPHA = /^[a-z]+$/
 
 var ASCII_TLDS = tlds.filter(function (tld) {
@@ -115,8 +115,8 @@ function component (argument) {
       hasProperty(argument, 'project', function (value) {
         return string(value) && /^[a-z0-9-]+$/.test(value)
       }) &&
-      hasProperty(argument, 'edition', function (value) {
-        return revedParse(value) !== false
+      hasProperty(argument, 'version', function (value) {
+        return VERSION_RE.test(value)
       }) &&
       hasProperty(argument, 'substitutions', function (value) {
         return (
