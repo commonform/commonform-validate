@@ -523,7 +523,7 @@ Children can also be incorporated by reference:
 
 ```javascript
 var validComponent = {
-  repository: 'api.commonform.org',
+  repository: 'commonform.org',
   publisher: 'kemitchell',
   project: 'orthodox-software-copyright-license',
   version: '1.0.0',
