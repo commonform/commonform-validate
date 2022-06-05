@@ -529,7 +529,7 @@ assert(
       repository: 'api.commonform.org',
       publisher: 'kemitchell',
       project: 'orthodox-software-copyright-license',
-      edition: '1e',
+      version: '1.0.0',
       upgrade: 'yes',
       substitutions: {
         terms: {
@@ -554,7 +554,7 @@ assert(
           repository: 'api.commonform.org',
           publisher: 'kemitchell',
           project: 'orthodox-software-copyright-license',
-          edition: '1e',
+          version: '1.0.0',
           upgrade: 'yes',
           substitutions: {
             terms: {
@@ -586,7 +586,7 @@ assert(
                 repository: 'api.commonform.org',
                 publisher: 'kemitchell',
                 project: 'orthodox-software-copyright-license',
-                edition: '1e',
+                version: '1.0.0',
                 upgrade: 'yes',
                 substitutions: {
                   terms: {
@@ -609,11 +609,9 @@ assert(
 )
 ```
 
-The `upgrade` flag indicates that the form should [upgrade]
-automatically to later published editions.  Without `upgrade`, the
-form will incorporate only the indicated edition.
-
-[upgrade]: https://www.npmjs.com/package/reviewers-edition-upgrade
+The `upgrade` flag indicates that the form should upgrade
+automatically to later published versions.  Without `upgrade`, the
+form will incorporate only the indicated version.
 
 ```javascript
 assert(
@@ -622,7 +620,7 @@ assert(
       repository: 'api.commonform.org',
       publisher: 'kemitchell',
       project: 'orthodox-software-copyright-license',
-      edition: '1e',
+      version: '1.0.0',
       substitutions: {
         terms: {
           Licensor: 'Vendor',
@@ -649,7 +647,7 @@ assert(
           repository: 'api.commonform.org',
           publisher: 'kemitchell',
           project: 'orthodox-software-copyright-license',
-          edition: '1e',
+          version: '1.0.0',
           substitutions: {
             terms: {
               Licensor: 'Vendor',
@@ -673,7 +671,7 @@ assert(
           repository: 'api.commonform.org',
           publisher: 'kemitchell',
           project: 'orthodox-software-copyright-license',
-          edition: '1e',
+          version: '1.0.0',
           substitutions: {
             terms: {
               Licensor: 'Vendor',

@@ -2,7 +2,6 @@ var array = require('is-array')
 var contiguous = require('contiguous')
 var has = require('has')
 var object = require('is-object')
-var revedParse = require('reviewers-edition-parse')
 var string = require('is-string')
 var tlds = require('tlds')
 
@@ -39,6 +38,16 @@ function term (argument) {
     text(argument) &&
     argument[0] !== ' ' &&
     argument[argument.length - 1] !== ' '
+  )
+}
+
+var VERSION_RE = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[1-9][0-9]*)?$/
+
+function version (argument) {
+  return (
+    string(argument) &&
+    argument.length > 0 &&
+    VERSION_RE.test(argument)
   )
 }
 
@@ -115,8 +124,8 @@ function component (argument) {
       hasProperty(argument, 'project', function (value) {
         return string(value) && /^[a-z0-9-]+$/.test(value)
       }) &&
-      hasProperty(argument, 'edition', function (value) {
-        return revedParse(value) !== false
+      hasProperty(argument, 'version', function (value) {
+        return version(value) !== false
       }) &&
       hasProperty(argument, 'substitutions', function (value) {
         return (
