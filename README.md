@@ -1,8 +1,11 @@
 # commonform-validate
 
-validate Objects against [Common Form](https://commonform.github.io)'s core schema for legal language
+validate Objects against [Common Form](https://commonform.github.io)'s
+core schema for legal language
 
-_If you're looking to get into Common Form, this `README` is the place to start.  The schema enforced by this package allows all the rest of the pieces of Common Form to communicate contract language in a uniform way._
+_If you're looking to get into Common Form, this `README` is the place
+to start.  The schema enforced by this package allows all the rest of the
+pieces of Common Form to communicate contract language in a uniform way._
 
 Common Form represents legal forms, and pieces of legal forms, as
 objects following a single, strict schema.  This package exports a
@@ -517,9 +520,7 @@ assert(
 
 ## Components
 
-The validation routine optionally permits components.
-
-Children can also be incorporated by reference:
+The validation routine optionally permits components.  Components incorporate children by reference.
 
 ```javascript
 var validComponent = {
