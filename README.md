@@ -534,6 +534,9 @@ var validComponent = {
     },
     headings: {
       'Express Warranties': 'Guarantees'
+    },
+    blanks: {
+      1: 'United States'
     }
   }
 }

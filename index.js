@@ -130,7 +130,18 @@ function component (argument) {
           object(value) &&
           hasProperty(value, 'terms', termMapping) &&
           hasProperty(value, 'headings', termMapping) &&
-          keyCount(value) === 2
+          hasProperty(value, 'blanks', function (blanks) {
+            return (
+              Object.keys(blanks).every(function (key) {
+                var parsed = parseInt(key)
+                return !isNaN(parsed) && parsed > 0
+              }) &&
+              Object.values(blanks).every(function (value) {
+                return typeof value === 'string'
+              })
+            )
+          }) &&
+          keyCount(value) === 3
         )
       })
     ) &&
