@@ -138,7 +138,7 @@ function component (argument) {
                 return BLANK_INDEX_RE.test(key)
               }) &&
               Object.values(blanks).every(function (value) {
-                return typeof value === 'string'
+                return typeof value === 'string' && value !== ''
               })
             )
           }) &&
