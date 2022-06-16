@@ -113,6 +113,8 @@ function child (argument, options) {
   )
 }
 
+var BLANK_INDEX_RE = /^[1-9][0-9]*$/
+
 exports.component = component
 
 function component (argument) {
@@ -133,8 +135,7 @@ function component (argument) {
           hasProperty(value, 'blanks', function (blanks) {
             return (
               Object.keys(blanks).every(function (key) {
-                var parsed = parseInt(key)
-                return !isNaN(parsed) && parsed > 0
+                return BLANK_INDEX_RE.test(key)
               }) &&
               Object.values(blanks).every(function (value) {
                 return typeof value === 'string'
