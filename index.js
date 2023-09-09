@@ -63,6 +63,38 @@ function term (argument) {
   )
 }
 
+// The following regular expression was copied from
+// https://github.com/mafintosh/is-my-json-valid/blob/58d30cbf99a22d8a3ff36771bc8e588e68f3847e/formats.js#L16
+//
+// Special thanks to Mathias Buus Madsen and Nikita Skovoroda!
+//
+// The MIT License (MIT)
+//
+// Copyright (c) 2014 Mathias Buus
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+var URI_RE = /^[a-zA-Z][a-zA-Z0-9+\-.]*:[^\s]*$/
+
+function uri (argument) {
+  return text(argument) && URI_RE.test(argument)
+}
+
 function simpleObject (permittedKey) {
   return function (argument) {
     return (
@@ -78,6 +110,14 @@ exports.term = exports.heading = exports.value = term
 var definition = exports.definition = simpleObject('definition')
 var reference = exports.reference = simpleObject('reference')
 var use = exports.use = simpleObject('use')
+
+var link = exports.link = function (argument) {
+  return (
+    object(argument) &&
+    keyCount(argument) === 1 &&
+    hasProperty(argument, 'link', uri)
+  )
+}
 
 function isEmptyString (argument) {
   return argument === ''
@@ -169,7 +209,7 @@ function termMapping (argument) {
 exports.content = content
 
 function content (argument, options) {
-  var predicates = [blank, child, definition, reference, text, use]
+  var predicates = [blank, child, definition, link, reference, text, use]
   if (options && options.allowComponents) {
     predicates.push(component)
   }
