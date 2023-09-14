@@ -420,7 +420,7 @@ Links refer to a URL or other World Wide Web resource.
 ```javascript
 assert(
   validate.link(
-    { link: 'https://example.com/' }
+    { link: 'http://example.com/' }
   )
 )
 ```
