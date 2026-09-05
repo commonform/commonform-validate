@@ -15,9 +15,7 @@
   },
   "devDependencies": {
     "defence-cli": "^3.0.1",
-    "nyc": "^15.1.0",
-    "standard": "^14.0.2",
-    "standard-markdown": "^5.0.1"
+    "nyc": "^15.1.0"
   },
   "files": [
     "LICENSE",
@@ -36,7 +34,6 @@
   "license": "BlueOak-1.0.0",
   "repository": "commonform/commonform-validate",
   "scripts": {
-    "lint": "standard && standard-markdown",
     "test": "defence README.md | sed \"s!from 'commonform-validate'!from './index.js'!\" | node",
     "precoverage": "defence README.md | replace-require-self > README.js",
     "coverage": "nyc --reporter=lcov --reporter=text-summary node README.js ; rm -f README.js"
