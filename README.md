@@ -17,7 +17,7 @@ this `README`.  The same examples serve as test suite for the package,
 using the `assert` module:
 
 ```javascript
-var assert = require('assert')
+import assert from 'assert'
 ```
 
 The goals of the schema's rules are:
@@ -50,7 +50,7 @@ For example:
 Becomes:
 
 ```javascript
-var validate = require('commonform-validate')
+import * as validate from 'commonform-validate'
 
 assert(
   validate.form(
@@ -551,7 +551,7 @@ assert(
 The validation routine optionally permits components.  Components incorporate children by reference.
 
 ```javascript
-var validComponent = {
+const validComponent = {
   component: 'https://commonform.org/kemitchell/orthodox-software-copyright-license',
   version: '1.0.0',
   substitutions: {
@@ -727,7 +727,7 @@ objects must be constructed with `{}` literal syntax or `new Object()`.
 Not functions or other types with the right properties set.
 
 ```javascript
-var invalidForm = function () {}
+const invalidForm = function () {}
 invalidForm.content = [
   'Example string content.'
 ]
@@ -737,7 +737,7 @@ assert(
 ```
 
 ```javascript
-var invalidChild = function () {}
+const invalidChild = function () {}
 invalidChild.form = {
   content: [
     'Example string content.'

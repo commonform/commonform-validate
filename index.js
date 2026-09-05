@@ -1,10 +1,11 @@
-var array = require('is-array')
-var contiguous = require('contiguous')
-var has = require('has')
-var object = require('is-object')
-var string = require('is-string')
+import array from 'is-array'
+import contiguous from 'contiguous'
+import has from 'has'
+import object from 'is-object'
+import string from 'is-string'
+import legalVersioningRegExp from 'legal-versioning-regexp' with { type: 'json' }
 
-var VERSION_RE = new RegExp('^' + require('legal-versioning-regexp') + '$')
+var VERSION_RE = new RegExp('^' + legalVersioningRegExp + '$')
 
 // The following regular expression was adapted from
 // https://gist.github.com/dperini/729294
@@ -55,7 +56,7 @@ function text (argument) {
   )
 }
 
-function term (argument) {
+export function term (argument) {
   return (
     text(argument) &&
     argument[0] !== ' ' &&
@@ -105,13 +106,14 @@ function simpleObject (permittedKey) {
   }
 }
 
-exports.term = exports.heading = exports.value = term
+export const heading = term
+export const value = term
 
-var definition = exports.definition = simpleObject('definition')
-var reference = exports.reference = simpleObject('reference')
-var use = exports.use = simpleObject('use')
+export const definition = simpleObject('definition')
+export const reference = simpleObject('reference')
+export const use = simpleObject('use')
 
-var link = exports.link = function (argument) {
+export function link (argument) {
   return (
     object(argument) &&
     keyCount(argument) === 1 &&
@@ -123,9 +125,7 @@ function isEmptyString (argument) {
   return argument === ''
 }
 
-exports.blank = blank
-
-function blank (argument) {
+export function blank (argument) {
   return (
     object(argument) &&
     keyCount(argument) === 1 &&
@@ -134,9 +134,7 @@ function blank (argument) {
   )
 }
 
-exports.child = child
-
-function child (argument, options) {
+export function child (argument, options) {
   return (
     object(argument) &&
     hasProperty(argument, 'form', function (argument) {
@@ -155,9 +153,7 @@ function child (argument, options) {
 
 var BLANK_INDEX_RE = /^[1-9][0-9]*$/
 
-exports.component = component
-
-function component (argument) {
+export function component (argument) {
   return (
     object(argument) &&
     (
@@ -206,9 +202,7 @@ function termMapping (argument) {
   )
 }
 
-exports.content = content
-
-function content (argument, options) {
+export function content (argument, options) {
   var predicates = [blank, child, definition, link, reference, text, use]
   if (options && options.allowComponents) {
     predicates.push(component)
@@ -218,9 +212,7 @@ function content (argument, options) {
   })
 }
 
-exports.form = form
-
-function form (argument, options) {
+export function form (argument, options) {
   return (
     object(argument) &&
     hasProperty(argument, 'content', function (elements) {

@@ -3,6 +3,8 @@
   "description": "validate Objects against Common Form's core schema for legal language",
   "version": "5.0.0",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com)",
+  "type": "module",
+  "main": "index.js",
   "dependencies": {
     "contiguous": "^1.0.2",
     "has": "^1.0.3",
@@ -14,7 +16,6 @@
   "devDependencies": {
     "defence-cli": "^3.0.1",
     "nyc": "^15.1.0",
-    "replace-require-self": "^1.1.1",
     "standard": "^14.0.2",
     "standard-markdown": "^5.0.1"
   },
@@ -36,7 +37,7 @@
   "repository": "commonform/commonform-validate",
   "scripts": {
     "lint": "standard && standard-markdown",
-    "test": "defence README.md | replace-require-self | node",
+    "test": "defence README.md | sed \"s!from 'commonform-validate'!from './index.js'!\" | node",
     "precoverage": "defence README.md | replace-require-self > README.js",
     "coverage": "nyc --reporter=lcov --reporter=text-summary node README.js ; rm -f README.js"
   }
