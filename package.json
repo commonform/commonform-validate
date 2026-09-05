@@ -13,14 +13,9 @@
     "legal-versioning-regexp": "^1.0.0"
   },
   "devDependencies": {
-    "defence-cli": "^3.0.1",
-    "nyc": "^15.1.0"
+    "defence-cli": "^3.0.1"
   },
-  "files": [
-    "LICENSE",
-    "README.md",
-    "index.js"
-  ],
+  "files": [],
   "homepage": "https://commonform.github.io",
   "keywords": [
     "contracts",
@@ -33,8 +28,10 @@
   "license": "BlueOak-1.0.0",
   "repository": "commonform/commonform-validate",
   "scripts": {
-    "test": "defence README.md | sed \"s!from 'commonform-validate'!from './index.js'!\" | node",
-    "precoverage": "defence README.md | replace-require-self > README.js",
-    "coverage": "nyc --reporter=lcov --reporter=text-summary node README.js ; rm -f README.js"
+    "extracttests": "defence -i javascript README.md | sed \"s!from 'commonform-validate'!from './index.js'!\" > README.js",
+    "pretest": "npm run extracttests",
+    "test": "node README.js",
+    "precoverage": "npm run extracttests",
+    "coverage": "node --experimental-test-coverage --test README.js"
   }
 }
