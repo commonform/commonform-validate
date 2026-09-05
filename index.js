@@ -1,6 +1,5 @@
 import array from 'is-array'
 import contiguous from 'contiguous'
-import has from 'has'
 import object from 'is-object'
 import string from 'is-string'
 import legalVersioningRegExp from 'legal-versioning-regexp' with { type: 'json' }
@@ -40,7 +39,7 @@ function keyCount (argument) {
 
 function hasProperty (argument, key, predicate) {
   return (
-    has(argument, key) &&
+    Object.hasOwn(argument, key) &&
     predicate(argument[key])
   )
 }
@@ -256,8 +255,8 @@ function terminalSpaceString (argument) {
 
 function looksLikeAChild (argument) {
   return (
-    has(argument, 'form') ||
-    has(argument, 'component')
+    Object.hasOwn(argument, 'form') ||
+    Object.hasOwn(argument, 'component')
   )
 }
 
